@@ -1,0 +1,97 @@
+{
+  "person_count": 3,
+  "style_dimensions": {
+    "placement": "Sağa Yatkın (Gelecek Odaklılık): Koppitz literatüründe sağa eğilim, dışa dönüklük, çevreyle etkileşime girme arzusu veya geleceğe dönük aktif bir tutum olarak yorumlanır., Dikey Merkez: Gündelik gerçeklikle bağlantının kopmadığı, dengeli bir duygusal zemin.",
+    "hierarchy": "Orta Düzey Boyut Farkı: Aile içinde güç dengesizlikleri veya belirli bir üyeye atfedilen belirgin bir önem göze çarpıyor.",
+    "details": "En büyük figür ID: 2, En küçük figür ID: 1 (Oran: 1.88)"
+  },
+  "movement_dimensions": [
+    {
+      "pair": [
+        0,
+        1
+      ],
+      "distance": 0.13980308287200827,
+      "comment": "Aşırı Yakın/Temas Halinde: Güçlü bir duygusal bağ, bağımlılık veya iç içe geçmiş sınır problemleri.",
+      "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+    },
+    {
+      "pair": [
+        0,
+        2
+      ],
+      "distance": 0.24784598945740322,
+      "comment": "Sağlıklı Etkileşim Mesafesi: Normal, erişilebilir ve etkileşime açık (KFD).",
+      "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+    },
+    {
+      "pair": [
+        1,
+        2
+      ],
+      "distance": 0.12779908006814786,
+      "comment": "Aşırı Yakın/Temas Halinde: Güçlü bir duygusal bağ, bağımlılık veya iç içe geçmiş sınır problemleri.",
+      "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+    }
+  ],
+  "animals": [],
+  "details": [
+    {
+      "id": 0,
+      "center": [
+        0.6273159980773926,
+        0.4544766843318939
+      ],
+      "size": [
+        0.14409500360488892,
+        0.4295225441455841
+      ],
+      "area": 0.061892052547039,
+      "confidence": 0.9007713794708252,
+      "box_raw": [
+        415.8960876464844,
+        119.85771179199219,
+        523.8232421875,
+        334.6189880371094
+      ]
+    },
+    {
+      "id": 1,
+      "center": [
+        0.7478870153427124,
+        0.5252406001091003
+      ],
+      "size": [
+        0.11130432784557343,
+        0.3282586634159088
+      ],
+      "area": 0.036536609890994054,
+      "confidence": 0.9007118940353394,
+      "box_raw": [
+        518.48388671875,
+        180.55563354492188,
+        601.850830078125,
+        344.6849670410156
+      ]
+    },
+    {
+      "id": 2,
+      "center": [
+        0.8719189167022705,
+        0.4944397509098053
+      ],
+      "size": [
+        0.1489810347557068,
+        0.46062129735946655
+      ],
+      "area": 0.06862383751112944,
+      "confidence": 0.8370006680488586,
+      "box_raw": [
+        597.2738647460938,
+        132.06455993652344,
+        708.8606567382812,
+        362.3752136230469
+      ]
+    }
+  ]
+}

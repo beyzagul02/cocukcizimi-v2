@@ -1,0 +1,31 @@
+﻿Modeller y├╝kleniyor...
+Analiz ediliyor: C:/Users/ranas/.gemini/antigravity/brain/7e032eb4-02c6-4978-90e7-4622f38a7c5a/uploaded_image_1770729818704.png
+Model y├╝kleniyor: runs\detect\yolo_person_model7\weights\best.pt
+
+============================================================
+├çOCUK RESM─░ ANAL─░Z RAPORU
+============================================================
+DOSYA: uploaded_image_1770729818704.png
+------------------------------------------------------------
+
+[1] DUYGU ANAL─░Z─░ (Fusion):
+  ANA TAHM─░N:  SAD (G├╝ven: %39.2)
+    - Sad  : %39.2  ÔûêÔûêÔûêÔûêÔûêÔûêÔûê
+    - Happy: %30.9  ÔûêÔûêÔûêÔûêÔûêÔûê
+    - Fear : %17.8  ÔûêÔûêÔûê
+    - Angry: %12.1  ÔûêÔûê
+
+[2] PS─░KOLOJ─░K SENARYO (├ûZET):
+  ├çizim genel olarak **Sad** (├£zg├╝n) kategorisinde de─şerlendirilmi┼ştir (G├╝ven: %39). Renk kullan─▒m─▒ (Siyah) tespit edilen duygu durumuyla uyumludur.
+
+[3] KOMPOZ─░SYON VE ─░L─░┼ŞK─░LER (KFD):
+  * Yerle┼şim: Merkezi Yerle┼şim (Dengeli - Koppitz), Dikey Merkez (Realite Uyumu)
+  * Hiyerar┼şi: Normal Boyut Da─ş─▒l─▒m─▒
+
+[4] RENK ANAL─░Z─░:
+  * Siyah (%2.4): Endi┼şe, Korku, Bast─▒r─▒lm─▒┼ş Duygular veya G├╝├ğ ─░ste─şi
+  * Kahverengi (%1.2): Topraklanma, G├╝ven Aray─▒┼ş─▒ veya Kat─▒l─▒k
+  * Gri (%1.2): N├Âtr, Belirsizlik veya ─░├ğe Kapanma
+
+============================================================
+

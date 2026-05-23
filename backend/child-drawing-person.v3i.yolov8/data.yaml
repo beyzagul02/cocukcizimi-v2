@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 2
+names: ['objects', 'person']
+
+roboflow:
+  workspace: childdrawingproject-nu5go
+  project: child-drawing-person
+  version: 3
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/childdrawingproject-nu5go/child-drawing-person/dataset/3

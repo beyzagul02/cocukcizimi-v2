@@ -1,9 +1,14 @@
 import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../main.dart';
 import 'login_screen.dart';
-import 'home_screen.dart';
+import 'report_detail_screen.dart';
 
 class UploadImageScreen extends StatefulWidget {
   const UploadImageScreen({super.key});
@@ -14,6 +19,7 @@ class UploadImageScreen extends StatefulWidget {
 
 class _UploadImageScreenState extends State<UploadImageScreen> {
   File? selectedImage;
+  bool isLoading = false;
 
   Future<void> pickImage(ImageSource source) async {
     final picker = ImagePicker();
@@ -30,10 +36,98 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     }
   }
 
-  void startAnalysis() {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text("Resim analize hazırlandı.")));
+  Future<void> startAnalysis() async {
+    if (selectedImage == null) return;
+
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      // standard Android emulator uses 10.0.2.2 to connect to local host machine
+      String url = "http://10.0.2.2:5000/analyze";
+      
+      // Fallback for Windows desktop and other non-mobile platforms
+      if (Theme.of(context).platform == TargetPlatform.windows || 
+          Theme.of(context).platform == TargetPlatform.macOS ||
+          Theme.of(context).platform == TargetPlatform.linux) {
+        url = "http://localhost:5000/analyze";
+      }
+
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'image',
+          selectedImage!.path,
+          contentType: MediaType('image', 'jpeg'),
+        ),
+      );
+
+      print("Analiz isteği gönderiliyor: $url");
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      if (response.statusCode == 200) {
+        var data = json.decode(utf8.decode(response.bodyBytes));
+        print("Analiz sonucu alındı: $data");
+
+        // Save to Firestore
+        final user = FirebaseAuth.instance.currentUser;
+        final reportMap = {
+          "userId": user?.uid ?? "anonymous",
+          "timestamp": FieldValue.serverTimestamp(),
+          "fileName": selectedImage!.path.split(Platform.pathSeparator).last,
+          "emotion": data["prediction"],
+          "confidence": data["confidence"],
+          "probabilities": data["probabilities"],
+          "psychologicalSummary": data["psychological_summary"],
+          "stylePlacement": data["style"]?["placement"] ?? "N/A",
+          "styleHierarchy": data["style"]?["hierarchy"] ?? "N/A",
+          "warnings": data["warnings"] ?? [],
+          "personCount": data["person_count"] ?? 0,
+          "colors": data["colors"] ?? [],
+          "movement": data["movement"] ?? [],
+        };
+
+        // Add to firestore
+        var docRef = await FirebaseFirestore.instance.collection("reports").add(reportMap);
+        reportMap["id"] = docRef.id;
+
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Analiz başarıyla tamamlandı!")),
+        );
+
+        // Go to report detail screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ReportDetailScreen(reportData: reportMap),
+          ),
+        );
+      } else {
+        var errMessage = "Bir hata oluştu (${response.statusCode})";
+        try {
+          var errData = json.decode(response.body);
+          if (errData["error"] != null) {
+            errMessage = errData["error"];
+          }
+        } catch (_) {}
+        throw Exception(errMessage);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Hata: $e")),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -152,11 +246,17 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
                   width: double.infinity,
                   height: 56,
                   child: ElevatedButton.icon(
-                    onPressed: startAnalysis,
-                    icon: const Icon(Icons.analytics_outlined),
-                    label: const Text(
-                      "Analize Başla",
-                      style: TextStyle(
+                    onPressed: isLoading ? null : startAnalysis,
+                    icon: isLoading
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          )
+                        : const Icon(Icons.analytics_outlined),
+                    label: Text(
+                      isLoading ? "Analiz Ediliyor..." : "Analize Başla",
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
                       ),

@@ -3,12 +3,37 @@ import '../main.dart';
 import 'login_screen.dart';
 
 class ReportDetailScreen extends StatelessWidget {
-  final String fileName;
+  final Map<String, dynamic> reportData;
 
-  const ReportDetailScreen({super.key, required this.fileName});
+  const ReportDetailScreen({super.key, required this.reportData});
 
   @override
   Widget build(BuildContext context) {
+    final String fileName = reportData["fileName"] ?? "resim.png";
+    final String emotion = reportData["emotion"] ?? "N/A";
+    final confidenceVal = reportData["confidence"];
+    final String confidence = confidenceVal is num
+        ? "%${confidenceVal.toStringAsFixed(1)}"
+        : "%$confidenceVal";
+
+    final rawProbs = reportData["probabilities"] ?? {};
+    final Map<String, dynamic> probabilities = Map<String, dynamic>.from(rawProbs);
+
+    final rawWarnings = reportData["warnings"] ?? [];
+    final List<String> warnings = List<String>.from(rawWarnings);
+
+    final String psychologicalSummary = reportData["psychologicalSummary"] ?? "";
+    final String stylePlacement = reportData["stylePlacement"] ?? "N/A";
+    final String styleHierarchy = reportData["styleHierarchy"] ?? "N/A";
+
+    final rawColors = reportData["colors"] ?? [];
+    final List<dynamic> colors = List<dynamic>.from(rawColors);
+
+    final rawMovement = reportData["movement"] ?? [];
+    final List<dynamic> movement = List<dynamic>.from(rawMovement);
+
+    final int personCount = reportData["personCount"] ?? 0;
+
     return Scaffold(
       backgroundColor: AppColors.background,
 
@@ -47,52 +72,64 @@ class ReportDetailScreen extends StatelessWidget {
 
       body: ListView(
         padding: const EdgeInsets.all(24),
-        children: const [
+        children: [
           ReportSection(
             title: "Duygu Analizi",
             icon: Icons.psychology_outlined,
-            children: [
-              "Ana Tahmin: HAPPY",
-              "Güven: %90.5",
-              "Happy: %90.5",
-              "Sad: %4.5",
-              "Angry: %3.9",
-              "Fear: %1.1",
+            children: <String>[
+              "Ana Tahmin: $emotion",
+              "Güven: $confidence",
+              ...probabilities.entries.map<String>((e) {
+                final val = e.value;
+                final pct = val is num ? val.toStringAsFixed(1) : val;
+                return "${e.key}: %$pct";
+              }),
             ],
           ),
 
           ReportSection(
             title: "Uyarılar",
             icon: Icons.warning_amber_rounded,
-            children: ["Resimde hiç kişi bulunamadı."],
+            children: warnings.isNotEmpty ? warnings : const ["Herhangi bir uyarı bulunamadı."],
           ),
 
           ReportSection(
             title: "Psikolojik Senaryo",
             icon: Icons.article_outlined,
-            children: [
-              "Çizim genel olarak Happy yani Mutlu kategorisinde değerlendirilmiştir.",
-              "Resimde insan figürü tespit edilememiştir.",
-              "Bu durum çocuğun insan ilişkilerinden kaçınma eğilimi veya çizim tarzıyla ilgili olabilir.",
-              "Renk kullanımı tespit edilen duygu durumuyla uyumludur.",
-            ],
+            children: psychologicalSummary
+                .split(". ")
+                .where((String s) => s.trim().isNotEmpty)
+                .map<String>((String s) => s.endsWith(".") ? s : "$s.")
+                .toList(),
           ),
 
           ReportSection(
-            title: "Kompozisyon ve İlişkiler",
+            title: "Kompozisyon ve İlişkiler (KFD)",
             icon: Icons.account_tree_outlined,
-            children: ["Yerleşim: N/A", "Hiyerarşi: N/A"],
+            children: <String>[
+              "Tespit Edilen Kişi Sayısı: $personCount",
+              "Yerleşim: $stylePlacement",
+              "Hiyerarşi: $styleHierarchy",
+              ...movement.map<String>((m) {
+                final pair = m['pair'] ?? [];
+                final comment = m['comment'] ?? '';
+                final dist = m['distance'];
+                final distStr = dist is num ? " (Mesafe: ${dist.toStringAsFixed(2)})" : "";
+                return "Figür ${pair.isNotEmpty ? pair[0] : '?'} ↔ Figür ${pair.length > 1 ? pair[1] : '?'}: $comment$distStr";
+              }),
+            ],
           ),
 
           ReportSection(
             title: "Renk Analizi",
             icon: Icons.palette_outlined,
-            children: [
-              "Yeşil (%75.8): Denge, büyüme, duygusal huzur",
-              "Kahverengi (%19.9): Topraklanma, güven arayışı veya katılık",
-              "Siyah (%2.3): Endişe, korku, bastırılmış duygular veya güç isteği",
-              "Gri (%2.1): Nötr, belirsizlik veya içe kapanma",
-            ],
+            children: colors.map<String>((c) {
+              final name = c['name'] ?? '';
+              final percent = c['percent'] ?? 0;
+              final meaning = c['meaning'] ?? '';
+              final pctStr = percent is num ? percent.toStringAsFixed(1) : percent;
+              return "$name (%$pctStr): $meaning";
+            }).toList(),
           ),
         ],
       ),

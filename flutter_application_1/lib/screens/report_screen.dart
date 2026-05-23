@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../main.dart';
 import 'report_detail_screen.dart';
 import 'login_screen.dart';
@@ -10,12 +12,6 @@ class ReportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final reports = [
-      {"fileName": "foto6.png", "emotion": "HAPPY", "confidence": "%90.5"},
-      {"fileName": "foto5.png", "emotion": "SAD", "confidence": "%78.2"},
-      {"fileName": "foto4.png", "emotion": "ANGRY", "confidence": "%64.7"},
-    ];
-
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -45,7 +41,8 @@ class ReportScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(24),
-        child: ListView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
               "Analiz Raporların",
@@ -65,86 +62,128 @@ class ReportScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            ...reports.map((report) {
-              return InkWell(
-                borderRadius: BorderRadius.circular(22),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ReportDetailScreen(fileName: report["fileName"]!),
-                    ),
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('reports')
+                    .where('userId', isEqualTo: FirebaseAuth.instance.currentUser?.uid ?? 'anonymous')
+                    .orderBy('timestamp', descending: true)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "Henüz kayıtlı raporunuz bulunmamaktadır.",
+                        style: TextStyle(color: AppColors.hintText, fontSize: 16),
+                      ),
+                    );
+                  }
+
+                  final docs = snapshot.data!.docs;
+
+                  return ListView.builder(
+                    itemCount: docs.length,
+                    itemBuilder: (context, index) {
+                      final doc = docs[index];
+                      final report = doc.data() as Map<String, dynamic>;
+                      report['id'] = doc.id;
+
+                      final fileName = report["fileName"] ?? "resim.png";
+                      final emotion = report["emotion"] ?? "N/A";
+                      final confidenceVal = report["confidence"];
+                      final confidence = confidenceVal is num
+                          ? "%${confidenceVal.toStringAsFixed(1)}"
+                          : "%$confidenceVal";
+
+                      return InkWell(
+                        borderRadius: BorderRadius.circular(22),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ReportDetailScreen(reportData: report),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 14),
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(22),
+                            border: Border.all(color: const Color(0xFFE5E7EB)),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 56,
+                                height: 56,
+                                decoration: BoxDecoration(
+                                  color: AppColors.softPanel,
+                                  borderRadius: BorderRadius.circular(16),
+                                ),
+                                child: const Icon(
+                                  Icons.description_outlined,
+                                  color: AppColors.primary,
+                                  size: 30,
+                                ),
+                              ),
+
+                              const SizedBox(width: 14),
+
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "$fileName",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w800,
+                                        color: AppColors.darkText,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      "Ana Tahmin: $emotion",
+                                      style: const TextStyle(
+                                        fontSize: 13.5,
+                                        color: AppColors.descriptionText,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      "Güven: $confidence",
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        color: AppColors.hintText,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                color: AppColors.hintText,
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
                   );
                 },
-                child: Container(
-                  margin: const EdgeInsets.only(bottom: 14),
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(22),
-                    border: Border.all(color: const Color(0xFFE5E7EB)),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 56,
-                        height: 56,
-                        decoration: BoxDecoration(
-                          color: AppColors.softPanel,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: const Icon(
-                          Icons.description_outlined,
-                          color: AppColors.primary,
-                          size: 30,
-                        ),
-                      ),
-
-                      const SizedBox(width: 14),
-
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "${report["fileName"]} Resim Raporu",
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                                color: AppColors.darkText,
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              "Ana Tahmin: ${report["emotion"]}",
-                              style: const TextStyle(
-                                fontSize: 13.5,
-                                color: AppColors.descriptionText,
-                              ),
-                            ),
-                            const SizedBox(height: 3),
-                            Text(
-                              "Güven: ${report["confidence"]}",
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: AppColors.hintText,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        color: AppColors.hintText,
-                        size: 16,
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }),
+              ),
+            ),
           ],
         ),
       ),

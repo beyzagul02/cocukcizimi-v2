@@ -1,0 +1,23 @@
+Found 587 images in c:\Users\ranas\OneDrive\Masaüstü\CocukDuyguProje\child-drawing-person.v3i.yolov8\train\images
+Image Name                     | YOLO Box Area (%)    | Avg Distance (px)    | Num Objects
+-------------------------------------------------------------------------------------
+a102_jpeg.rf.22d60c6b480ba4d   | 4.65                 | N/A                  | 1         
+a104_jpeg.rf.d13043dff30dc18   | 8.46                 | N/A                  | 1         
+a105_jpeg.rf.4fb04158c583027   | 0.00                 | N/A                  | 0         
+a107_jpeg.rf.33ad4f25591835a   | 6.59                 | 106.6                | 2         
+a109_jpeg.rf.20fcc376c4042f8   | 39.37                | 267.8                | 5         
+a10_jpg.rf.dc10606af20b2bb41   | 25.05                | 165.1                | 5         
+a111_jpeg.rf.95a1c7fdfa11f44   | 0.00                 | N/A                  | 0         
+a114_webp.rf.ab43ddd352de7e2   | 9.49                 | N/A                  | 1         
+a115_jpeg.rf.956855b46432e02   | 19.57                | 97.2                 | 2         
+a11_jpg.rf.f0a381214deb611a8   | 28.76                | 204.9                | 4         
+a13_jpg.rf.fcfaebd1940a2b3b8   | 0.00                 | N/A                  | 0         
+a15_jpg.rf.8c62f9d2ab93a2d13   | 96.49                | 227.2                | 5         
+a17_jpg.rf.6104eece00ac4bca3   | 0.00                 | N/A                  | 0         
+a18_jpg.rf.7c251626af1058b3a   | 58.98                | N/A                  | 1         
+a19_jpg.rf.80eac2d19ac0ae936   | 80.14                | N/A                  | 1         
+a1_jpg.rf.f5386840a20ed9eae1   | 312.42               | 266.2                | 20        
+a20_jpg.rf.4c6c01e796930f143   | 62.18                | N/A                  | 1         
+a21_jpg.rf.275901cc069e34c83   | 55.74                | N/A                  | 1         
+a22_jpg.rf.f6d85de7503291781   | 78.86                | 331.7                | 2         
+a24_jpg.rf.61baf1b5400b0deff   | 5.34                 | N/A                  | 1         

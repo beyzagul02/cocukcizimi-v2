@@ -1,0 +1,1098 @@
+{
+  "Angry": {
+    "filename": "a1.jpg",
+    "prediction": "Angry",
+    "confidence": 62.97423839569092,
+    "probabilities": {
+      "Angry": 62.97423839569092,
+      "Fear": 7.956326752901077,
+      "Happy": 24.318931996822357,
+      "Sad": 4.750503599643707
+    },
+    "person_count": 11,
+    "style": {
+      "placement": "Merkezi Yerleşim (Dengeli - Koppitz), Dikey Merkez (Realite Uyumu)",
+      "hierarchy": "Belirgin Hiyerarşik Fark (Otorite Figürü Baskınlığı veya Diğerinin Değersizleştirilmesi)",
+      "details": "En büyük figür ID: 10, En küçük figür ID: 4 (Oran: 2.94)"
+    },
+    "movement": [
+      {
+        "pair": [
+          0,
+          1
+        ],
+        "distance": 0.5932711248692398,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          0,
+          2
+        ],
+        "distance": 0.6747243130240368,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          0,
+          3
+        ],
+        "distance": 0.21688709047209906,
+        "comment": "Etkileşime Açık (Normal Yakınlık)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          0,
+          4
+        ],
+        "distance": 0.5688814552524724,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          0,
+          5
+        ],
+        "distance": 0.17998917826577995,
+        "comment": "Etkileşime Açık (Normal Yakınlık)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          0,
+          6
+        ],
+        "distance": 0.3448792650630346,
+        "comment": "Etkileşime Açık (Normal Yakınlık)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          0,
+          7
+        ],
+        "distance": 0.8364892322753251,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          0,
+          8
+        ],
+        "distance": 0.47193621517579865,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          0,
+          9
+        ],
+        "distance": 0.4741475160426424,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          0,
+          10
+        ],
+        "distance": 0.2774211732468341,
+        "comment": "Etkileşime Açık (Normal Yakınlık)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          1,
+          2
+        ],
+        "distance": 0.14962041734185616,
+        "comment": "Aşırı Yakın/Temas Halinde (Güçlü Etkileşim)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          1,
+          3
+        ],
+        "distance": 0.6706901759628557,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          1,
+          4
+        ],
+        "distance": 0.14976997544754894,
+        "comment": "Aşırı Yakın/Temas Halinde (Güçlü Etkileşim)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          1,
+          5
+        ],
+        "distance": 0.6485797280933563,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          1,
+          6
+        ],
+        "distance": 0.6361402425138073,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          1,
+          7
+        ],
+        "distance": 0.3165578941625567,
+        "comment": "Etkileşime Açık (Normal Yakınlık)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          1,
+          8
+        ],
+        "distance": 0.38642104033502206,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          1,
+          9
+        ],
+        "distance": 0.4210984247151346,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          1,
+          10
+        ],
+        "distance": 0.3199952379151385,
+        "comment": "Etkileşime Açık (Normal Yakınlık)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          2,
+          3
+        ],
+        "distance": 0.7087402181631137,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          2,
+          4
+        ],
+        "distance": 0.2981329721583575,
+        "comment": "Etkileşime Açık (Normal Yakınlık)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          2,
+          5
+        ],
+        "distance": 0.7585212255241356,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          2,
+          6
+        ],
+        "distance": 0.6400712445712399,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          2,
+          7
+        ],
+        "distance": 0.17529672391763926,
+        "comment": "Etkileşime Açık (Normal Yakınlık)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          2,
+          8
+        ],
+        "distance": 0.5342988528484874,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          2,
+          9
+        ],
+        "distance": 0.3817926253949797,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          2,
+          10
+        ],
+        "distance": 0.3985240320788623,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          3,
+          4
+        ],
+        "distance": 0.6919882779893425,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          3,
+          5
+        ],
+        "distance": 0.3901807722358756,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          3,
+          6
+        ],
+        "distance": 0.16137782621252633,
+        "comment": "Etkileşime Açık (Normal Yakınlık)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          3,
+          7
+        ],
+        "distance": 0.8450995224243553,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          3,
+          8
+        ],
+        "distance": 0.6564941838799525,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          3,
+          9
+        ],
+        "distance": 0.39839028983418867,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          3,
+          10
+        ],
+        "distance": 0.3642457835047335,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          4,
+          5
+        ],
+        "distance": 0.5820468791773433,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          4,
+          6
+        ],
+        "distance": 0.6919542349800853,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          4,
+          7
+        ],
+        "distance": 0.4569894080032352,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          4,
+          8
+        ],
+        "distance": 0.2521020190195294,
+        "comment": "Etkileşime Açık (Normal Yakınlık)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          4,
+          9
+        ],
+        "distance": 0.5231000193431954,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          4,
+          10
+        ],
+        "distance": 0.32812046881822027,
+        "comment": "Etkileşime Açık (Normal Yakınlık)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          5,
+          6
+        ],
+        "distance": 0.5248644992205799,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          5,
+          7
+        ],
+        "distance": 0.9303876073587793,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          5,
+          8
+        ],
+        "distance": 0.41008382628823054,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          5,
+          9
+        ],
+        "distance": 0.6294808167843368,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          5,
+          10
+        ],
+        "distance": 0.3723184103733492,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          6,
+          7
+        ],
+        "distance": 0.7530382424651851,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          6,
+          8
+        ],
+        "distance": 0.7145291423967755,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          6,
+          9
+        ],
+        "distance": 0.2809108736609003,
+        "comment": "Etkileşime Açık (Normal Yakınlık)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          6,
+          10
+        ],
+        "distance": 0.37593916812622635,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          7,
+          8
+        ],
+        "distance": 0.70259380333877,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          7,
+          9
+        ],
+        "distance": 0.47498737399700397,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          7,
+          10
+        ],
+        "distance": 0.5644759556581462,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          8,
+          9
+        ],
+        "distance": 0.6411758115585587,
+        "comment": "Etkileşim Kopukluğu (İzolasyon)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          8,
+          10
+        ],
+        "distance": 0.3519608296099137,
+        "comment": "Nötr Mesafe",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          9,
+          10
+        ],
+        "distance": 0.3050968903174035,
+        "comment": "Etkileşime Açık (Normal Yakınlık)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      }
+    ],
+    "details": [
+      {
+        "id": 0,
+        "center": [
+          0.7302826046943665,
+          0.32526928186416626
+        ],
+        "size": [
+          0.17149890959262848,
+          0.46291977167129517
+        ],
+        "area": 0.07939023607049567,
+        "confidence": 0.8004894256591797,
+        "box_raw": [
+          394.45428466796875,
+          33.77136993408203,
+          499.41162109375,
+          200.42250061035156
+        ]
+      },
+      {
+        "id": 1,
+        "center": [
+          0.39305388927459717,
+          0.8133752346038818
+        ],
+        "size": [
+          0.15593793988227844,
+          0.35976478457450867
+        ],
+        "area": 0.05610097934874059,
+        "confidence": 0.7958537936210632,
+        "box_raw": [
+          192.83197021484375,
+          228.05743408203125,
+          288.2659912109375,
+          357.57275390625
+        ]
+      },
+      {
+        "id": 2,
+        "center": [
+          0.24472445249557495,
+          0.7937628030776978
+        ],
+        "size": [
+          0.1754484474658966,
+          0.3924677073955536
+        ],
+        "area": 0.06885784994304966,
+        "confidence": 0.7384423017501831,
+        "box_raw": [
+          96.08413696289062,
+          215.1104278564453,
+          203.45858764648438,
+          356.3988037109375
+        ]
+      },
+      {
+        "id": 3,
+        "center": [
+          0.5796980261802673,
+          0.16917861998081207
+        ],
+        "size": [
+          0.17258378863334656,
+          0.33835723996162415
+        ],
+        "area": 0.05839497438409946,
+        "confidence": 0.7143442630767822,
+        "box_raw": [
+          301.9645690917969,
+          0.0,
+          407.5858459472656,
+          121.80860900878906
+        ]
+      },
+      {
+        "id": 4,
+        "center": [
+          0.5354627370834351,
+          0.8597515821456909
+        ],
+        "size": [
+          0.12871696054935455,
+          0.2607261538505554
+        ],
+        "area": 0.03355987805936689,
+        "confidence": 0.6912537813186646,
+        "box_raw": [
+          288.3157958984375,
+          262.579833984375,
+          367.090576171875,
+          356.4412536621094
+        ]
+      },
+      {
+        "id": 5,
+        "center": [
+          0.8935973644256592,
+          0.4009290039539337
+        ],
+        "size": [
+          0.21115800738334656,
+          0.33628982305526733
+        ],
+        "area": 0.07101028893964845,
+        "confidence": 0.6863985061645508,
+        "box_raw": [
+          482.2672119140625,
+          83.80227661132812,
+          611.4959106445312,
+          204.86660766601562
+        ]
+      },
+      {
+        "id": 6,
+        "center": [
+          0.41854777932167053,
+          0.17774604260921478
+        ],
+        "size": [
+          0.15759257972240448,
+          0.35549208521842957
+        ],
+        "area": 0.05602291478046917,
+        "confidence": 0.6861915588378906,
+        "box_raw": [
+          207.92791748046875,
+          0.0,
+          304.37457275390625,
+          127.9771499633789
+        ]
+      },
+      {
+        "id": 7,
+        "center": [
+          0.07858438789844513,
+          0.8496772050857544
+        ],
+        "size": [
+          0.15523920953273773,
+          0.26444321870803833
+        ],
+        "area": 0.04105195623852875,
+        "confidence": 0.619239091873169,
+        "box_raw": [
+          0.5904481410980225,
+          258.2840270996094,
+          95.59683990478516,
+          353.48358154296875
+        ]
+      },
+      {
+        "id": 8,
+        "center": [
+          0.7790225148200989,
+          0.7946819067001343
+        ],
+        "size": [
+          0.1359381079673767,
+          0.3999345004558563
+        ],
+        "area": 0.054366339302847067,
+        "confidence": 0.5744789242744446,
+        "box_raw": [
+          435.1647033691406,
+          214.09727478027344,
+          518.3588256835938,
+          358.0736999511719
+        ]
+      },
+      {
+        "id": 9,
+        "center": [
+          0.26422232389450073,
+          0.4124683737754822
+        ],
+        "size": [
+          0.16711477935314178,
+          0.35626518726348877
+        ],
+        "area": 0.059537178160743665,
+        "confidence": 0.5480775833129883,
+        "box_raw": [
+          110.56694030761719,
+          84.36089324951172,
+          212.8411865234375,
+          212.61634826660156
+        ]
+      },
+      {
+        "id": 10,
+        "center": [
+          0.5450267195701599,
+          0.5317705273628235
+        ],
+        "size": [
+          0.24570254981517792,
+          0.40139898657798767
+        ],
+        "area": 0.09862475449543995,
+        "confidence": 0.4884648323059082,
+        "box_raw": [
+          258.371337890625,
+          119.18557739257812,
+          408.7413024902344,
+          263.689208984375
+        ]
+      }
+    ],
+    "psychological_summary": "Çizim genel olarak **Angry** (Öfkeli) kategorisinde değerlendirilmiştir (Güven: %63). Aile içinde belirgin bir güç dengesizliği veya otorite figürü vurgusu göze çarpmaktadır. Renk kullanımı (Gri) tespit edilen duygu durumuyla uyumludur.",
+    "warnings": [],
+    "animals": [],
+    "colors": [
+      {
+        "color_rgb": [
+          215.1785567010322,
+          210.28989690721912,
+          208.53525773195437
+        ],
+        "name": "Gri",
+        "percent": 24.26,
+        "meaning": "Nötr, Belirsizlik veya İçe Kapanma"
+      },
+      {
+        "color_rgb": [
+          199.36814744801472,
+          168.36105860113352,
+          128.06096408317578
+        ],
+        "name": "Pembe",
+        "percent": 21.15,
+        "meaning": "Sevgi İhtiyacı, Hassasiyet"
+      },
+      {
+        "color_rgb": [
+          77.59734042553114,
+          62.95691489361748,
+          61.794680851064015
+        ],
+        "name": "Siyah",
+        "percent": 18.82,
+        "meaning": "Endişe, Korku, Bastırılmış Duygular veya Güç İsteği"
+      },
+      {
+        "color_rgb": [
+          118.04904632152528,
+          131.47411444141665,
+          143.98147138964598
+        ],
+        "name": "Gri",
+        "percent": 18.34,
+        "meaning": "Nötr, Belirsizlik veya İçe Kapanma"
+      },
+      {
+        "color_rgb": [
+          175.86123853211035,
+          99.18061926605432,
+          71.54472477064239
+        ],
+        "name": "Kahverengi",
+        "percent": 17.43,
+        "meaning": "Topraklanma, Güven Arayışı veya Katılık"
+      }
+    ]
+  },
+  "Fear": {
+    "filename": "f1.jpg",
+    "prediction": "Angry",
+    "confidence": 53.9024293422699,
+    "probabilities": {
+      "Angry": 53.9024293422699,
+      "Fear": 19.307665526866913,
+      "Happy": 11.763633787631989,
+      "Sad": 15.026263892650604
+    },
+    "person_count": 0,
+    "style": {},
+    "movement": [],
+    "details": [],
+    "psychological_summary": "Çizim genel olarak **Angry** (Öfkeli) kategorisinde değerlendirilmiştir (Güven: %54). Resimde insan figürü tespit edilememiştir. Bu durum, çocuğun insan ilişkilerinden kaçınma eğilimi veya çizim tarzıyla (soyut/nesne odaklı) ilgili olabilir. Model öfke tespiti yapsa da, figür eksikliği gizli bir endişe veya 'boşluk' hissini yansıtıyor olabilir. Renk kullanımı (Gri) tespit edilen duygu durumuyla uyumludur.",
+    "warnings": [
+      "Resimde hiç kişi bulunamadı."
+    ],
+    "animals": [],
+    "colors": [
+      {
+        "color_rgb": [
+          157.93538961038772,
+          153.01363636363394,
+          130.1808441558433
+        ],
+        "name": "Gri",
+        "percent": 30.81,
+        "meaning": "Nötr, Belirsizlik veya İçe Kapanma"
+      },
+      {
+        "color_rgb": [
+          159.45098039215537,
+          98.40409207161181,
+          102.96035805626609
+        ],
+        "name": "Kahverengi",
+        "percent": 23.45,
+        "meaning": "Topraklanma, Güven Arayışı veya Katılık"
+      },
+      {
+        "color_rgb": [
+          78.55069930069776,
+          133.1612762237769,
+          132.3881118881114
+        ],
+        "name": "Mor",
+        "percent": 22.869999999999997,
+        "meaning": "Hayal Gücü, Fantezi Dünyası veya Gerginlik"
+      },
+      {
+        "color_rgb": [
+          93.37447108603655,
+          92.1262341325816,
+          95.20592383638942
+        ],
+        "name": "Gri",
+        "percent": 14.180000000000001,
+        "meaning": "Nötr, Belirsizlik veya İçe Kapanma"
+      },
+      {
+        "color_rgb": [
+          47.991935483869895,
+          45.85368663594544,
+          43.982718894008784
+        ],
+        "name": "Siyah",
+        "percent": 8.690000000000001,
+        "meaning": "Endişe, Korku, Bastırılmış Duygular veya Güç İsteği"
+      }
+    ]
+  },
+  "Happy": {
+    "filename": "h1.jpg",
+    "prediction": "Happy",
+    "confidence": 61.18195056915283,
+    "probabilities": {
+      "Angry": 0.22386140190064907,
+      "Fear": 1.751953735947609,
+      "Happy": 61.18195056915283,
+      "Sad": 36.84223294258118
+    },
+    "person_count": 3,
+    "style": {
+      "placement": "Sağa Yatkın (Gelecek Odaklı/Dışa Dönük - Koppitz), Dikey Merkez (Realite Uyumu)",
+      "hierarchy": "Orta Düzey Boyut Farkı",
+      "details": "En büyük figür ID: 2, En küçük figür ID: 1 (Oran: 1.88)"
+    },
+    "movement": [
+      {
+        "pair": [
+          0,
+          1
+        ],
+        "distance": 0.13980308287200827,
+        "comment": "Aşırı Yakın/Temas Halinde (Güçlü Etkileşim)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          0,
+          2
+        ],
+        "distance": 0.24784598945740322,
+        "comment": "Etkileşime Açık (Normal Yakınlık)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      },
+      {
+        "pair": [
+          1,
+          2
+        ],
+        "distance": 0.12779908006814786,
+        "comment": "Aşırı Yakın/Temas Halinde (Güçlü Etkileşim)",
+        "citation": "Burns & Kaufman (1970) - Hareket/Mesafe Boyutu"
+      }
+    ],
+    "details": [
+      {
+        "id": 0,
+        "center": [
+          0.6273159980773926,
+          0.4544766843318939
+        ],
+        "size": [
+          0.14409500360488892,
+          0.4295225441455841
+        ],
+        "area": 0.061892052547039,
+        "confidence": 0.9007713794708252,
+        "box_raw": [
+          415.8960876464844,
+          119.85771179199219,
+          523.8232421875,
+          334.6189880371094
+        ]
+      },
+      {
+        "id": 1,
+        "center": [
+          0.7478870153427124,
+          0.5252406001091003
+        ],
+        "size": [
+          0.11130432784557343,
+          0.3282586634159088
+        ],
+        "area": 0.036536609890994054,
+        "confidence": 0.9007118940353394,
+        "box_raw": [
+          518.48388671875,
+          180.55563354492188,
+          601.850830078125,
+          344.6849670410156
+        ]
+      },
+      {
+        "id": 2,
+        "center": [
+          0.8719189167022705,
+          0.4944397509098053
+        ],
+        "size": [
+          0.1489810347557068,
+          0.46062129735946655
+        ],
+        "area": 0.06862383751112944,
+        "confidence": 0.8370006680488586,
+        "box_raw": [
+          597.2738647460938,
+          132.06455993652344,
+          708.8606567382812,
+          362.3752136230469
+        ]
+      }
+    ],
+    "psychological_summary": "Çizim genel olarak **Happy** (Mutlu) kategorisinde değerlendirilmiştir (Güven: %61). Aile bireyleri arasında boyut farkları mevcuttur. Renk kullanımı (Pembe) tespit edilen duygu durumuyla uyumludur.",
+    "warnings": [],
+    "animals": [],
+    "colors": [
+      {
+        "color_rgb": [
+          123.47031144969701,
+          224.462693255658,
+          245.52991261483982
+        ],
+        "name": "Pembe",
+        "percent": 44.64,
+        "meaning": "Sevgi İhtiyacı, Hassasiyet"
+      },
+      {
+        "color_rgb": [
+          54.53260167850168,
+          210.34796642995516,
+          54.188185926409375
+        ],
+        "name": "Yeşil",
+        "percent": 30.98,
+        "meaning": "Denge, Büyüme, Duygusal Huzur"
+      },
+      {
+        "color_rgb": [
+          21.328320802004427,
+          27.1365914786966,
+          26.213032581451245
+        ],
+        "name": "Siyah",
+        "percent": 7.9799999999999995,
+        "meaning": "Endişe, Korku, Bastırılmış Duygular veya Güç İsteği"
+      },
+      {
+        "color_rgb": [
+          211.02247191011176,
+          94.27387640449469,
+          49.129213483143985
+        ],
+        "name": "Kahverengi",
+        "percent": 7.12,
+        "meaning": "Topraklanma, Güven Arayışı veya Katılık"
+      }
+    ]
+  },
+  "Sad": {
+    "filename": "s1.jpg",
+    "prediction": "Angry",
+    "confidence": 35.89843809604645,
+    "probabilities": {
+      "Angry": 35.89843809604645,
+      "Fear": 23.36631715297699,
+      "Happy": 9.057152271270752,
+      "Sad": 31.678089499473572
+    },
+    "person_count": 1,
+    "style": {
+      "placement": "Merkezi Yerleşim (Dengeli - Koppitz), Dikey Merkez (Realite Uyumu)",
+      "hierarchy": "Normal Boyut Dağılımı",
+      "details": "En büyük figür ID: 0, En küçük figür ID: 0 (Oran: 1.00)"
+    },
+    "movement": [],
+    "details": [
+      {
+        "id": 0,
+        "center": [
+          0.4843234121799469,
+          0.5501067042350769
+        ],
+        "size": [
+          0.8604074716567993,
+          0.8853832483291626
+        ],
+        "area": 0.7617903621421789,
+        "confidence": 0.8252856135368347,
+        "box_raw": [
+          34.6365966796875,
+          68.74566650390625,
+          585.29736328125,
+          635.3909301757812
+        ]
+      }
+    ],
+    "psychological_summary": "Çizim genel olarak **Angry** (Öfkeli) kategorisinde değerlendirilmiştir (Güven: %36). Renk kullanımı (Gri) tespit edilen duygu durumuyla uyumludur.",
+    "warnings": [],
+    "animals": [],
+    "colors": [
+      {
+        "color_rgb": [
+          187.27181618186063,
+          186.9760449767804,
+          179.8315815204098
+        ],
+        "name": "Gri",
+        "percent": 40.67,
+        "meaning": "Nötr, Belirsizlik veya İçe Kapanma"
+      },
+      {
+        "color_rgb": [
+          167.65891472868162,
+          168.08887043189387,
+          162.68715393134008
+        ],
+        "name": "Gri",
+        "percent": 36.29,
+        "meaning": "Nötr, Belirsizlik veya İçe Kapanma"
+      },
+      {
+        "color_rgb": [
+          75.99526066350562,
+          57.22748815166068,
+          76.35734597156305
+        ],
+        "name": "Siyah",
+        "percent": 10.549999999999999,
+        "meaning": "Endişe, Korku, Bastırılmış Duygular veya Güç İsteği"
+      },
+      {
+        "color_rgb": [
+          126.10156249999994,
+          120.35286458333296,
+          131.88411458333326
+        ],
+        "name": "Gri",
+        "percent": 7.75,
+        "meaning": "Nötr, Belirsizlik veya İçe Kapanma"
+      },
+      {
+        "color_rgb": [
+          23.407172995779433,
+          98.23206751054812,
+          157.5590717299578
+        ],
+        "name": "Mavi",
+        "percent": 4.74,
+        "meaning": "Sakinlik, Kontrol, Bazen İçe Dönüklük"
+      }
+    ]
+  }
+}

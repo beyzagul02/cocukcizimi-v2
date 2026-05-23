@@ -1,0 +1,11 @@
+# Dataset Configuration
+# Absolute paths to ensure YOLO finds the data correctly
+
+path: c:/Users/ranas/OneDrive/Masaüstü/CocukDuyguProje/child-drawing-person.v3i.yolov8
+train: train/images
+val: valid/images
+test: test/images
+
+# Classes
+nc: 2
+names: ['objects', 'person']

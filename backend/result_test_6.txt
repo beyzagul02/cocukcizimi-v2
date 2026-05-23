@@ -1,0 +1,34 @@
+﻿Modeller y├╝kleniyor...
+Analiz ediliyor: C:/Users/ranas/.gemini/antigravity/brain/7e032eb4-02c6-4978-90e7-4622f38a7c5a/uploaded_image_1770731475760.png
+Model y├╝kleniyor: runs\detect\yolo_person_model7\weights\best.pt
+
+============================================================
+├çOCUK RESM─░ ANAL─░Z RAPORU
+============================================================
+DOSYA: uploaded_image_1770731475760.png
+------------------------------------------------------------
+
+[1] DUYGU ANAL─░Z─░ (Fusion):
+  ANA TAHM─░N:  SAD (G├╝ven: %47.1)
+    - Sad  : %47.1  ÔûêÔûêÔûêÔûêÔûêÔûêÔûêÔûêÔûê
+    - Happy: %46.9  ÔûêÔûêÔûêÔûêÔûêÔûêÔûêÔûêÔûê
+    - Fear : %4.0  
+    - Angry: %2.0  
+
+  [!] UYARILAR:
+    - Resimde hi├ğ ki┼şi bulunamad─▒.
+
+[2] PS─░KOLOJ─░K SENARYO (├ûZET):
+  ├çizim genel olarak **Sad** (├£zg├╝n) kategorisinde de─şerlendirilmi┼ştir (G├╝ven: %47). Duygu analizi negatif (├£zg├╝n) olmas─▒na ra─şmen, kullan─▒lan canl─▒ renkler (Sar─▒) umut veya savunma mekanizmas─▒na i┼şaret edebilir.
+
+[3] KOMPOZ─░SYON VE ─░L─░┼ŞK─░LER (KFD):
+  * Yerle┼şim: N/A
+  * Hiyerar┼şi: N/A
+
+[4] RENK ANAL─░Z─░:
+  * Sar─▒ (%9.6): Ne┼şe, D─▒┼şa D├Ân├╝kl├╝k, Bazen K─▒skan├ğl─▒k/Ba─ş─▒ml─▒l─▒k
+  * Pembe (%3.8): Sevgi ─░htiyac─▒, Hassasiyet
+  * Kahverengi (%3.7): Topraklanma, G├╝ven Aray─▒┼ş─▒ veya Kat─▒l─▒k
+
+============================================================
+
