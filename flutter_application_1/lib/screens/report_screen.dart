@@ -67,9 +67,17 @@ class ReportScreen extends StatelessWidget {
                 stream: FirebaseFirestore.instance
                     .collection('reports')
                     .where('userId', isEqualTo: FirebaseAuth.instance.currentUser?.uid ?? 'anonymous')
-                    .orderBy('timestamp', descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        "Hata oluştu: ${snapshot.error}",
+                        style: const TextStyle(color: Colors.red, fontSize: 16),
+                      ),
+                    );
+                  }
+
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
@@ -85,14 +93,30 @@ class ReportScreen extends StatelessWidget {
 
                   final docs = snapshot.data!.docs;
 
+                  // Sort locally by timestamp descending
+                  final sortedDocs = List<QueryDocumentSnapshot>.from(docs);
+                  sortedDocs.sort((a, b) {
+                    final aData = a.data() as Map<String, dynamic>;
+                    final bData = b.data() as Map<String, dynamic>;
+
+                    final aTimestamp = aData['timestamp'] as Timestamp?;
+                    final bTimestamp = bData['timestamp'] as Timestamp?;
+
+                    if (aTimestamp == null && bTimestamp == null) return 0;
+                    if (aTimestamp == null) return -1; // New documents (null timestamp locally) at the top
+                    if (bTimestamp == null) return 1;
+
+                    return bTimestamp.compareTo(aTimestamp);
+                  });
+
                   return ListView.builder(
-                    itemCount: docs.length,
+                    itemCount: sortedDocs.length,
                     itemBuilder: (context, index) {
-                      final doc = docs[index];
+                      final doc = sortedDocs[index];
                       final report = doc.data() as Map<String, dynamic>;
                       report['id'] = doc.id;
 
-                      final fileName = report["fileName"] ?? "resim.png";
+                      final reportName = report["reportName"] ?? report["fileName"] ?? "Çizim Raporu";
                       final emotion = report["emotion"] ?? "N/A";
                       final confidenceVal = report["confidence"];
                       final confidence = confidenceVal is num
@@ -141,7 +165,7 @@ class ReportScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "$fileName",
+                                      "$reportName",
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(

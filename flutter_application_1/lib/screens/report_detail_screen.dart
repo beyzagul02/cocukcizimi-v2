@@ -9,7 +9,7 @@ class ReportDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String fileName = reportData["fileName"] ?? "resim.png";
+    final String reportName = reportData["reportName"] ?? reportData["fileName"] ?? "Çizim Raporu";
     final String emotion = reportData["emotion"] ?? "N/A";
     final confidenceVal = reportData["confidence"];
     final String confidence = confidenceVal is num
@@ -42,7 +42,7 @@ class ReportDetailScreen extends StatelessWidget {
         elevation: 0,
 
         title: Text(
-          "$fileName Raporu",
+          reportName,
           style: const TextStyle(
             color: AppColors.darkText,
             fontWeight: FontWeight.w800,

@@ -3,6 +3,7 @@ import tempfile
 import numpy as np
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from PIL import Image, ImageOps  # 👈 PIL kütüphanelerini ekledik
 import predict_fusion
 
 app = Flask(__name__)
@@ -31,13 +32,19 @@ def analyze_image():
         return jsonify({"error": "Dosya adı boş."}), 400
         
     try:
-        # Save to a temporary file
+        # 1. Resmi açıyoruz ve EXIF (yön) bilgisini düzeltiyoruz 👈
+        image = Image.open(file.stream)
+        image = ImageOps.exif_transpose(image)
+        
+        # 2. Geçici bir dosya yolu oluşturuyoruz 👈
         suffix = os.path.splitext(file.filename)[1]
         with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
-            file.save(tmp.name)
             tmp_path = tmp.name
             
-        print(f"Resim geçici dosyaya kaydedildi: {tmp_path}")
+        # 3. Yönü düzeltilmiş resmi geçici dosyaya kaydediyoruz 👈
+        image.save(tmp_path)
+        
+        print(f"Resim yönü düzeltilerek geçici dosyaya kaydedildi: {tmp_path}")
         
         # Run prediction
         result = predict_fusion.predict(tmp_path)
