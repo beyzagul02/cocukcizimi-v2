@@ -100,6 +100,41 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     );
   }
 
+  Future<String> _resolveServerUrl() async {
+    final candidates = [
+      "http://10.0.2.2:5000",
+      "http://localhost:5000",
+      "http://192.168.1.26:5000",
+      "http://192.168.1.106:5000",
+    ];
+
+    final completer = Completer<String>();
+    int failedCount = 0;
+
+    for (var candidate in candidates) {
+      http.get(Uri.parse(candidate)).timeout(const Duration(milliseconds: 1000)).then((response) {
+        if (!completer.isCompleted) {
+          print("Sunucu bulundu ve seçildi: $candidate");
+          completer.complete(candidate);
+        }
+      }).catchError((error) {
+        failedCount++;
+        if (failedCount == candidates.length && !completer.isCompleted) {
+          completer.completeError("Hiçbir yerel sunucuya bağlanılamadı.");
+        }
+      });
+    }
+
+    try {
+      final base = await completer.future;
+      return "$base/analyze";
+    } catch (e) {
+      print("Dinamik sunucu tespiti başarısız oldu: $e");
+      // Fallback
+      return "http://10.0.2.2:5000/analyze";
+    }
+  }
+
   Future<void> startAnalysis(String reportName) async {
     if (selectedImage == null) return;
 
@@ -109,15 +144,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     });
 
     try {
-      // standard Android emulator uses 10.0.2.2 to connect to local host machine
-      String url = "http://10.0.2.2:5000/analyze";
-
-      // Fallback for Windows desktop and other non-mobile platforms
-      if (Theme.of(context).platform == TargetPlatform.windows ||
-          Theme.of(context).platform == TargetPlatform.macOS ||
-          Theme.of(context).platform == TargetPlatform.linux) {
-        url = "http://localhost:5000/analyze";
-      }
+      String url = await _resolveServerUrl();
 
       var request = http.MultipartRequest('POST', Uri.parse(url));
       request.files.add(
@@ -129,7 +156,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
       );
 
       print("Analiz isteği gönderiliyor: $url");
-      var streamedResponse = await request.send();
+      var streamedResponse = await request.send().timeout(const Duration(seconds: 25));
       var response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
