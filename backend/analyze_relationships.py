@@ -34,7 +34,7 @@ class RelationshipAnalyzer:
     def analyze_image(self, image_path):
         """Resimdeki figürler arası ilişkileri KFD boyutlarına göre analiz eder."""
         # False positive engellemek için confidence artırıldı (0.25 -> 0.45)
-        results = self.model.predict(image_path, conf=0.45, verbose=False)
+        results = self.model.predict(image_path, conf=0.45, verbose=False, imgsz=320)
         r = results[0]
         
         persons = []
@@ -88,7 +88,7 @@ class RelationshipAnalyzer:
     def detect_animals(self, image_path):
         """Standard YOLO modeli ile hayvanları tespit eder (Kedi, Köpek vb.)."""
         try:
-            results = self.model.predict(image_path, verbose=False, conf=0.3)
+            results = self.model.predict(image_path, verbose=False, conf=0.3, imgsz=320)
             
             detected = []
             animal_classes = ["cat", "dog", "bird", "horse", "sheep", "cow", "bear"]

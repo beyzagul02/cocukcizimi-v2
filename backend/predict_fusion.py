@@ -64,7 +64,7 @@ def get_best_yolo_model():
 
 def extract_yolo_features(model, img_path):
     # YOLO feature extraction logic
-    results = model.predict(img_path, verbose=False, conf=0.25)
+    results = model.predict(img_path, verbose=False, conf=0.25, imgsz=320)
     r = results[0]
     
     person_boxes = []
