@@ -229,8 +229,8 @@ def init_models():
     except Exception as e:
         print(f"PCA yükleme hatası: {e}")
 
-# Modelleri Flask ayağa kalkarken otomatik yükle
-init_models()
+# Modelleri Flask ayağa kalkarken otomatik yükle (Lazy loading için devre dışı bırakıldı)
+# init_models()
 
 def predict(image_path):
     init_models()
