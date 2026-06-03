@@ -161,7 +161,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
       );
 
       print("Analiz isteği gönderiliyor: $url");
-      var streamedResponse = await request.send().timeout(const Duration(seconds: 25));
+      var streamedResponse = await request.send().timeout(const Duration(seconds: 75));
       var response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
@@ -234,12 +234,20 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
         isLoading = false;
         isSuccess = false;
       });
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(
-        content: Text("Hata: $e\nLütfen bilgisayarınızdaki sunucu bağlantısını kontrol edin."),
-        duration: const Duration(seconds: 5),
+
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text("Bir şeyler ters gitti. Ana menüye yönlendiriliyorsunuz... ⚠️"),
+        duration: Duration(milliseconds: 2500),
+        backgroundColor: Colors.redAccent,
       ));
+
+      // Redirect to main menu (pop back to HomeScreen)
+      await Future.delayed(const Duration(milliseconds: 2500));
+      if (!mounted) return;
+
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
     }
   }
 
@@ -485,6 +493,8 @@ class _PlayfulTransitionOverlayState extends State<PlayfulTransitionOverlay> wit
   late AnimationController _bounceController;
   int _messageIndex = 0;
   Timer? _messageTimer;
+  Timer? _noticeTimer;
+  bool _showWakeupNotice = false;
 
   final List<String> _loadingMessages = [
     "Çizimin inceleniyor... 🕵️‍♂️🎨",
@@ -513,6 +523,14 @@ class _PlayfulTransitionOverlayState extends State<PlayfulTransitionOverlay> wit
         });
       }
     });
+
+    _noticeTimer = Timer(const Duration(seconds: 5), () {
+      if (mounted) {
+        setState(() {
+          _showWakeupNotice = true;
+        });
+      }
+    });
   }
 
   @override
@@ -520,6 +538,7 @@ class _PlayfulTransitionOverlayState extends State<PlayfulTransitionOverlay> wit
     _pulseController.dispose();
     _bounceController.dispose();
     _messageTimer?.cancel();
+    _noticeTimer?.cancel();
     super.dispose();
   }
 
@@ -595,6 +614,35 @@ class _PlayfulTransitionOverlayState extends State<PlayfulTransitionOverlay> wit
             color: AppColors.hintText,
           ),
         ),
+        if (_showWakeupNotice) ...[
+          const SizedBox(height: 24),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFF9C4), // Soft yellow
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: const Color(0xFFFFF176)),
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.hourglass_empty, color: Color(0xFFE65100), size: 18),
+                SizedBox(width: 8),
+                Flexible(
+                  child: Text(
+                    "Bulut sunucu uyandırılıyor...\n(İlk kullanımda 1 dk sürebilir)",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFFE65100),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }
