@@ -22,6 +22,10 @@ def make_serializable(obj):
         return tuple(make_serializable(v) for v in obj)
     return obj
 
+@app.route('/', methods=['GET'])
+def health_check():
+    return jsonify({"status": "healthy", "message": "Child Drawing Analysis API is running"}), 200
+
 @app.route('/analyze', methods=['POST'])
 def analyze_image():
     if 'image' not in request.files:

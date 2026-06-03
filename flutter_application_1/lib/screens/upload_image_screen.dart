@@ -115,7 +115,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
 
     for (var candidate in candidates) {
       final isHttps = candidate.startsWith("https://");
-      final timeoutDuration = isHttps ? const Duration(milliseconds: 3500) : const Duration(milliseconds: 1000);
+      final timeoutDuration = isHttps ? const Duration(seconds: 75) : const Duration(milliseconds: 1000);
 
       http.get(Uri.parse(candidate)).timeout(timeoutDuration).then((response) {
         if (!completer.isCompleted) {
