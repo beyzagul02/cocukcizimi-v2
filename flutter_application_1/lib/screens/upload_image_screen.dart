@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -119,6 +120,11 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   }
 
   Future<String> _resolveServerUrl() async {
+    if (kReleaseMode) {
+      print("Uygulama release modunda: Doğrudan Render bulut sunucusu seçildi.");
+      return "https://cocukcizimi-v2.onrender.com/analyze";
+    }
+
     final candidates = [
       "https://cocukcizimi-v2.onrender.com",
       "http://10.0.2.2:5000",

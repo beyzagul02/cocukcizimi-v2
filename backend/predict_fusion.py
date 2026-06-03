@@ -161,21 +161,33 @@ def print_cli_report(result):
             
     print("\n" + "="*60 + "\n")
 
-def predict(image_path):
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+stats_mean = None
+stats_std = None
+yolo_model = None
+cnn_model = None
+color_analyzer = None
+mlp_model = None
+pca_model = None
+
+def init_models():
+    global stats_mean, stats_std, yolo_model, cnn_model, color_analyzer, mlp_model, pca_model
+    if yolo_model is not None:
+        return
+        
+    print("Modeller hafızaya yükleniyor...")
     
     # 1. Load Stats
     if not Path(stats_path).exists():
         print("HATA: İstatistik dosyası bulunamadı. Önce eğitimi çalıştırın.")
-        return None
-
+        return
+        
     with open(stats_path, "r") as f:
         stats = json.load(f)
-    mean = np.array(stats["mean"], dtype=np.float32)
-    std = np.array(stats["std"], dtype=np.float32)
+    stats_mean = np.array(stats["mean"], dtype=np.float32)
+    stats_std = np.array(stats["std"], dtype=np.float32)
     
     # 2. Load Models
-    print("Modeller yükleniyor...")
     yolo_model = YOLO(get_best_yolo_model())
     
     cnn_model = models.mobilenet_v2(weights=None)
@@ -191,10 +203,27 @@ def predict(image_path):
     color_analyzer = ColorAnalyzer()
     
     # 3. Load MLP
-    model = FusionMLP(input_dim=128, num_classes=len(classes)).to(device)
-    model.load_state_dict(torch.load(model_path, map_location=device))
-    model.eval()
+    mlp_model = FusionMLP(input_dim=128, num_classes=len(classes)).to(device)
+    if Path(model_path).exists():
+        mlp_model.load_state_dict(torch.load(model_path, map_location=device))
+    mlp_model.eval()
     
+    # 4. Load PCA
+    try:
+        with open("pca_model.pkl", "rb") as f:
+            pca_model = pickle.load(f)
+    except Exception as e:
+        print(f"PCA yükleme hatası: {e}")
+
+# Modelleri Flask ayağa kalkarken otomatik yükle
+init_models()
+
+def predict(image_path):
+    init_models()
+    if yolo_model is None or cnn_model is None or mlp_model is None:
+        print("HATA: Modeller yüklenemedi.")
+        return None
+        
     # 4. Extract Features
     print(f"Analiz ediliyor: {image_path}")
     
@@ -232,13 +261,10 @@ def predict(image_path):
     # 5. Fuse & Normalize
     try:
         combined_feat = np.concatenate([cnn_feat, yolo_feat, color_feat])
-        normalized_feat = (combined_feat - mean) / std
+        normalized_feat = (combined_feat - stats_mean) / stats_std
         
-        # DİKKAT: PCA dönüşümü ekleniyor.
-        with open("pca_model.pkl", "rb") as f:
-            pca = pickle.load(f)
-            
-        normalized_feat = pca.transform(normalized_feat.reshape(1, -1))[0]
+        if pca_model is not None:
+            normalized_feat = pca_model.transform(normalized_feat.reshape(1, -1))[0]
         
     except Exception as e:
         print(f"Özellik Birleştirme veya PCA Hatası: {e}")
@@ -249,7 +275,7 @@ def predict(image_path):
     temperature = 2.0
     
     with torch.no_grad():
-        outputs = model(tensor_input)
+        outputs = mlp_model(tensor_input)
         scaled_outputs = outputs / temperature
         probs = torch.softmax(scaled_outputs, dim=1)
         confidence, predicted = torch.max(probs, 1)
@@ -274,7 +300,7 @@ def predict(image_path):
 
     # 7. Relationship Analysis & Extensions
     try:
-        analyzer = RelationshipAnalyzer(model_path=get_best_yolo_model())
+        analyzer = RelationshipAnalyzer(model=yolo_model)
         report = analyzer.analyze_image(image_path)
         
         result_data["person_count"] = report.get("person_count", 0)

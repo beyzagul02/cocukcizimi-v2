@@ -22,11 +22,14 @@ def get_best_yolo_model():
     return "yolov8n.pt"
 
 class RelationshipAnalyzer:
-    def __init__(self, model_path=None):
-        if model_path is None:
-            model_path = get_best_yolo_model()
-        print(f"Model yükleniyor: {model_path}")
-        self.model = YOLO(model_path)
+    def __init__(self, model_path=None, model=None):
+        if model is not None:
+            self.model = model
+        else:
+            if model_path is None:
+                model_path = get_best_yolo_model()
+            print(f"Model yükleniyor: {model_path}")
+            self.model = YOLO(model_path)
 
     def analyze_image(self, image_path):
         """Resimdeki figürler arası ilişkileri KFD boyutlarına göre analiz eder."""
@@ -85,11 +88,7 @@ class RelationshipAnalyzer:
     def detect_animals(self, image_path):
         """Standard YOLO modeli ile hayvanları tespit eder (Kedi, Köpek vb.)."""
         try:
-            # Standart modeli yükle (Cache'den veya indirerek)
-            # Not: Bu biraz yavaş olabilir, normalde init'te yüklenmeli ama 
-            # hafıza korumak için sadece gerektiğinde çağırıyoruz.
-            animal_model = YOLO("yolov8n.pt") 
-            results = animal_model.predict(image_path, verbose=False, conf=0.3)
+            results = self.model.predict(image_path, verbose=False, conf=0.3)
             
             detected = []
             animal_classes = ["cat", "dog", "bird", "horse", "sheep", "cow", "bear"]
@@ -100,7 +99,7 @@ class RelationshipAnalyzer:
             
             for box in results[0].boxes:
                 cls_id = int(box.cls[0])
-                name = animal_model.names[cls_id]
+                name = self.model.names[cls_id]
                 
                 if name in animal_classes:
                     detected.append({
