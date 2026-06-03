@@ -22,7 +22,6 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   File? selectedImage;
   bool isLoading = false;
   bool isSuccess = false;
-  static String? customServerIp;
 
   Future<void> pickImage(ImageSource source) async {
     final picker = ImagePicker();
@@ -103,8 +102,6 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
 
   Future<String> _resolveServerUrl() async {
     final candidates = [
-      if (customServerIp != null && customServerIp!.isNotEmpty)
-        "http://${customServerIp!.trim()}:5000",
       "http://10.0.2.2:5000",
       "http://localhost:5000",
       "http://172.27.21.21:5000",
@@ -137,66 +134,6 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
       // Fallback
       return "http://10.0.2.2:5000/analyze";
     }
-  }
-
-  Future<void> _showIpSettingsDialog() async {
-    final TextEditingController ipController = TextEditingController(text: customServerIp ?? "172.27.21.21");
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(22),
-          ),
-          title: const Text(
-            "Sunucu IP Ayarı",
-            style: TextStyle(
-              fontWeight: FontWeight.w800,
-              color: AppColors.darkText,
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Eğer fiziksel bir cihaz kullanıyorsanız, bilgisayarınızın yerel IP adresini girin:",
-                style: TextStyle(fontSize: 14, color: AppColors.hintText),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: ipController,
-                decoration: const InputDecoration(
-                  hintText: "Örn: 172.27.21.21",
-                ),
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("İptal"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text("Kaydet"),
-              onPressed: () {
-                setState(() {
-                  customServerIp = ipController.text.trim();
-                });
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Sunucu IP'si güncellendi: $customServerIp")),
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   Future<void> startAnalysis(String reportName) async {
@@ -296,7 +233,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(
-        content: Text("Hata: $e\nLütfen sunucu bağlantısını ve IP ayarını kontrol edin."),
+        content: Text("Hata: $e\nLütfen bilgisayarınızdaki sunucu bağlantısını kontrol edin."),
         duration: const Duration(seconds: 5),
       ));
     }
@@ -320,11 +257,6 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
             elevation: 0,
             foregroundColor: AppColors.darkText,
             actions: [
-              IconButton(
-                icon: const Icon(Icons.settings, color: AppColors.primary),
-                tooltip: "Sunucu IP Ayarı",
-                onPressed: _showIpSettingsDialog,
-              ),
               TextButton.icon(
                 onPressed: () {
                   Navigator.pushReplacement(
