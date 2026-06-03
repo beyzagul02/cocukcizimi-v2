@@ -76,7 +76,8 @@ def analyze_image():
         import traceback
         tb = traceback.format_exc()
         print(f"Sunucu hatası:\n{tb}")
-        return jsonify({"error": str(e), "traceback": tb}), 500
+        # Güvenlik nedeniyle iç detaylar ve traceback istemciye gönderilmez, sadece sözel hata döndürülür.
+        return jsonify({"error": "Analiz sırasında beklenmeyen bir hata oluştu. Lütfen resmi kontrol edip tekrar deneyin."}), 500
 
 if __name__ == '__main__':
     # Run Flask server (read port from env for Render compat)
