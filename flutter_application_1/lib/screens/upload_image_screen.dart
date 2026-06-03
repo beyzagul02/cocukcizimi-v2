@@ -22,6 +22,8 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   File? selectedImage;
   bool isLoading = false;
   bool isSuccess = false;
+  bool hasError = false;
+  String errorMessage = "";
 
   Future<void> pickImage(ImageSource source) async {
     final picker = ImagePicker();
@@ -39,62 +41,78 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
 
   Future<void> _showNameInputDialog() async {
     final TextEditingController nameController = TextEditingController();
+    String? dialogError;
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(22),
-          ),
-          title: const Text(
-            "Rapor Kayıt Adı",
-            style: TextStyle(
-              fontWeight: FontWeight.w800,
-              color: AppColors.darkText,
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Bu analiz raporunu kaydetmek için bir isim belirleyin:",
-                style: TextStyle(fontSize: 14, color: AppColors.hintText),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(22),
               ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: nameController,
-                autofocus: true,
-                decoration: const InputDecoration(
-                  hintText: "Örn: Ahmet'in Aile Çizimi",
+              title: const Text(
+                "Rapor Kayıt Adı",
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.darkText,
                 ),
               ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("İptal"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text("Analiz Et"),
-              onPressed: () {
-                final enteredName = nameController.text.trim();
-                if (enteredName.isNotEmpty) {
-                  Navigator.of(context).pop();
-                  startAnalysis(enteredName);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Lütfen geçerli bir isim girin.")),
-                  );
-                }
-              },
-            ),
-          ],
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Bu analiz raporunu kaydetmek için bir isim belirleyin:",
+                    style: TextStyle(fontSize: 14, color: AppColors.hintText),
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: nameController,
+                    autofocus: true,
+                    decoration: const InputDecoration(
+                      hintText: "Örn: Ahmet'in Aile Çizimi",
+                    ),
+                  ),
+                  if (dialogError != null) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      dialogError!,
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text("İptal"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: const Text("Analiz Et"),
+                  onPressed: () {
+                    final enteredName = nameController.text.trim();
+                    if (enteredName.isNotEmpty) {
+                      Navigator.of(context).pop();
+                      startAnalysis(enteredName);
+                    } else {
+                      setState(() {
+                        dialogError = "Lütfen geçerli bir isim girin.";
+                      });
+                    }
+                  },
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -146,6 +164,8 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     setState(() {
       isLoading = true;
       isSuccess = false;
+      hasError = false;
+      errorMessage = "";
     });
 
     try {
@@ -230,24 +250,27 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
       }
     } catch (e) {
       if (!mounted) return;
+      
+      String friendlyMsg = "Sunucuyla veya veritabanıyla bağlantı kurulamadı. Lütfen internet bağlantınızı kontrol edip tekrar deneyin.";
+      final errStr = e.toString().toLowerCase();
+      if (!errStr.contains("exception") && 
+          !errStr.contains("socket") && 
+          !errStr.contains("http") && 
+          !errStr.contains("connection") && 
+          !errStr.contains("database") && 
+          !errStr.contains("firebase") && 
+          !errStr.contains("firestore") &&
+          !errStr.contains("refused") &&
+          !errStr.contains("timeout")) {
+        friendlyMsg = e.toString().replaceAll("Exception: ", "");
+      }
+
       setState(() {
         isLoading = false;
         isSuccess = false;
+        hasError = true;
+        errorMessage = friendlyMsg;
       });
-
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Bir şeyler ters gitti. Ana menüye yönlendiriliyorsunuz... ⚠️"),
-        duration: Duration(milliseconds: 2500),
-        backgroundColor: Colors.redAccent,
-      ));
-
-      // Redirect to main menu (pop back to HomeScreen)
-      await Future.delayed(const Duration(milliseconds: 2500));
-      if (!mounted) return;
-
-      if (Navigator.canPop(context)) {
-        Navigator.pop(context);
-      }
     }
   }
 
@@ -394,11 +417,20 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
             ),
           ),
         ),
-        if (isLoading || isSuccess)
+        if (isLoading || isSuccess || hasError)
           Positioned.fill(
             child: Scaffold(
               backgroundColor: Colors.white.withOpacity(0.96),
-              body: PlayfulTransitionOverlay(isSuccess: isSuccess),
+              body: PlayfulTransitionOverlay(
+                isSuccess: isSuccess,
+                hasError: hasError,
+                errorMessage: errorMessage,
+                onClose: () {
+                  setState(() {
+                    hasError = false;
+                  });
+                },
+              ),
             ),
           ),
       ],
@@ -481,8 +513,17 @@ class UploadOptionCard extends StatelessWidget {
 
 class PlayfulTransitionOverlay extends StatefulWidget {
   final bool isSuccess;
+  final bool hasError;
+  final String errorMessage;
+  final VoidCallback? onClose;
 
-  const PlayfulTransitionOverlay({super.key, required this.isSuccess});
+  const PlayfulTransitionOverlay({
+    super.key,
+    required this.isSuccess,
+    this.hasError = false,
+    this.errorMessage = "",
+    this.onClose,
+  });
 
   @override
   State<PlayfulTransitionOverlay> createState() => _PlayfulTransitionOverlayState();
@@ -544,6 +585,15 @@ class _PlayfulTransitionOverlayState extends State<PlayfulTransitionOverlay> wit
 
   @override
   Widget build(BuildContext context) {
+    Widget content;
+    if (widget.hasError) {
+      content = _buildErrorContent();
+    } else if (widget.isSuccess) {
+      content = _buildSuccessContent();
+    } else {
+      content = _buildLoadingContent();
+    }
+
     return Container(
       color: Colors.white.withOpacity(0.96),
       child: Center(
@@ -551,9 +601,7 @@ class _PlayfulTransitionOverlayState extends State<PlayfulTransitionOverlay> wit
           padding: const EdgeInsets.all(32.0),
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 500),
-            child: widget.isSuccess
-                ? _buildSuccessContent()
-                : _buildLoadingContent(),
+            child: content,
           ),
         ),
       ),
@@ -721,6 +769,69 @@ class _PlayfulTransitionOverlayState extends State<PlayfulTransitionOverlay> wit
             fontSize: 13,
             fontStyle: FontStyle.italic,
             color: AppColors.hintText,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildErrorContent() {
+    return Column(
+      key: const ValueKey("error"),
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 140,
+          height: 140,
+          decoration: BoxDecoration(
+            color: const Color(0xFFFFEBEE), // Soft red
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.red.withOpacity(0.3), width: 3),
+          ),
+          child: const Icon(
+            Icons.error_outline_rounded,
+            size: 70,
+            color: Colors.red,
+          ),
+        ),
+        const SizedBox(height: 40),
+        const Text(
+          "İşlem Başarısız ⚠️",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w900,
+            color: Colors.red,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          widget.errorMessage,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+            color: AppColors.descriptionText,
+            height: 1.4,
+          ),
+        ),
+        const SizedBox(height: 32),
+        ElevatedButton(
+          onPressed: widget.onClose,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+          ),
+          child: const Text(
+            "Ana Menüye Dön",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ],

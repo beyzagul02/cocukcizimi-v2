@@ -23,16 +23,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool isLoading = false;
   bool obscurePassword = true;
+  String? errorMessage;
 
   Future<void> registerUser() async {
+    setState(() {
+      errorMessage = null;
+    });
+
     if (firstNameController.text.trim().isEmpty ||
         lastNameController.text.trim().isEmpty ||
         emailController.text.trim().isEmpty ||
         phoneController.text.trim().isEmpty ||
         passwordController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Lütfen tüm alanları doldurun")),
-      );
+      setState(() {
+        errorMessage = "Lütfen tüm alanları doldurun.";
+      });
       return;
     }
 
@@ -73,27 +78,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
 
-      String message = "Bir hata oluştu";
+      String message = "Bir hata oluştu. Lütfen tekrar deneyin.";
 
       if (e.code == 'email-already-in-use') {
-        message = "Bu e-posta zaten kayıtlı";
+        message = "Bu e-posta adresi zaten kayıtlı.";
       } else if (e.code == 'weak-password') {
-        message = "Şifre çok zayıf";
+        message = "Şifre çok zayıf. Lütfen daha güçlü bir şifre seçin.";
       } else if (e.code == 'invalid-email') {
-        message = "Geçersiz e-posta adresi";
+        message = "Geçersiz e-posta adresi girdiniz.";
       } else if (e.code == 'operation-not-allowed') {
-        message = "Firebase Authentication içinde Email/Password açık değil";
+        message = "Kayıt yöntemi şu anda kapalı.";
       }
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+      setState(() {
+        errorMessage = message;
+      });
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Hata: $e")));
+      setState(() {
+        errorMessage = "Kayıt işlemi sırasında beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.";
+      });
     } finally {
       if (mounted) {
         setState(() {
@@ -250,6 +255,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         },
                       ),
                     ),
+
+                    // 🔴 HATA MESAJI
+                    if (errorMessage != null) ...[
+                      const SizedBox(height: 14),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.error_outline,
+                            color: Colors.red,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              errorMessage!,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
 
                     const SizedBox(height: 26),
 

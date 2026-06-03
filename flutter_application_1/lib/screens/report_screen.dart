@@ -70,10 +70,25 @@ class ReportScreen extends StatelessWidget {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
-                    return Center(
-                      child: Text(
-                        "Hata oluştu: ${snapshot.error}",
-                        style: const TextStyle(color: Colors.red, fontSize: 16),
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(24.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.error_outline, color: Colors.red, size: 48),
+                            SizedBox(height: 12),
+                            Text(
+                              "Raporlar yüklenirken bir hata oluştu. Lütfen internet bağlantınızı kontrol edip tekrar deneyin.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   }
