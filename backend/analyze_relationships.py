@@ -2,12 +2,15 @@ import numpy as np
 from ultralytics import YOLO
 from pathlib import Path
 import math
+import os
+
+BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def get_best_yolo_model():
     """Mevcut en iyi YOLO modelini bulur."""
-    runs_dir = Path("runs/detect")
+    runs_dir = Path(os.path.join(BACKEND_DIR, "runs", "detect"))
     if not runs_dir.exists():
-        return "yolov8n.pt"
+        return os.path.join(BACKEND_DIR, "yolov8n.pt")
         
     def get_run_number(p):
         name = p.name
@@ -19,7 +22,7 @@ def get_best_yolo_model():
         weights_path = candidates[0] / "weights" / "best.pt"
         if weights_path.exists():
             return str(weights_path)
-    return "yolov8n.pt"
+    return os.path.join(BACKEND_DIR, "yolov8n.pt")
 
 class RelationshipAnalyzer:
     def __init__(self, model_path=None, model=None):

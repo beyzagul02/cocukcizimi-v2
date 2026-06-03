@@ -25,8 +25,9 @@ from analyze_colors import ColorAnalyzer
 COLOR_ORDER = ["Kırmızı", "Mavi", "Yeşil", "Sarı", "Siyah", "Kahverengi", "Mor", "Turuncu", "Pembe", "Gri"]
 
 # --- AYARLAR ---
-model_path = "fusion_mlp_model.pth"
-stats_path = "fusion_stats.json"
+BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
+model_path = os.path.join(BACKEND_DIR, "fusion_mlp_model.pth")
+stats_path = os.path.join(BACKEND_DIR, "fusion_stats.json")
 img_size = (224, 224)
 classes = ["Angry", "Fear", "Happy", "Sad"]
 
@@ -48,9 +49,9 @@ class FusionMLP(nn.Module):
         return self.net(x)
 
 def get_best_yolo_model():
-    runs_dir = Path("runs/detect")
+    runs_dir = Path(os.path.join(BACKEND_DIR, "runs", "detect"))
     if not runs_dir.exists():
-        return "yolov8n.pt"
+        return os.path.join(BACKEND_DIR, "yolov8n.pt")
         
     def get_run_number(p):
         name = p.name
@@ -62,7 +63,7 @@ def get_best_yolo_model():
         weights_path = candidates[0] / "weights" / "best.pt"
         if weights_path.exists():
             return str(weights_path)
-    return "yolov8n.pt"
+    return os.path.join(BACKEND_DIR, "yolov8n.pt")
 
 def extract_yolo_features(model, img_path):
     # YOLO feature extraction logic
@@ -204,8 +205,9 @@ def init_models():
     cnn_model = models.mobilenet_v2(weights=None)
     in_features = cnn_model.classifier[1].in_features
     cnn_model.classifier[1] = nn.Linear(in_features, len(classes))
-    if Path('finetuned_cnn.pth').exists():
-        cnn_model.load_state_dict(torch.load('finetuned_cnn.pth', map_location=device))
+    cnn_path = os.path.join(BACKEND_DIR, 'finetuned_cnn.pth')
+    if Path(cnn_path).exists():
+        cnn_model.load_state_dict(torch.load(cnn_path, map_location=device))
     cnn_model.classifier = nn.Identity()
     cnn_model = cnn_model.to(device)
     cnn_model.eval()
@@ -221,7 +223,8 @@ def init_models():
     
     # 4. Load PCA
     try:
-        with open("pca_model.pkl", "rb") as f:
+        pca_path = os.path.join(BACKEND_DIR, "pca_model.pkl")
+        with open(pca_path, "rb") as f:
             pca_model = pickle.load(f)
     except Exception as e:
         print(f"PCA yükleme hatası: {e}")
