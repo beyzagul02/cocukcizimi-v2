@@ -17,7 +17,6 @@ from torchvision import models, transforms
 from PIL import Image
 import json
 import argparse
-import pickle
 from pathlib import Path
 from analyze_relationships import RelationshipAnalyzer
 from analyze_colors import ColorAnalyzer
@@ -180,10 +179,11 @@ yolo_model = None
 cnn_model = None
 color_analyzer = None
 mlp_model = None
-pca_model = None
+pca_components = None
+pca_mean = None
 
 def init_models():
-    global stats_mean, stats_std, yolo_model, cnn_model, color_analyzer, mlp_model, pca_model
+    global stats_mean, stats_std, yolo_model, cnn_model, color_analyzer, mlp_model, pca_components, pca_mean
     if yolo_model is not None:
         return
         
@@ -207,10 +207,17 @@ def init_models():
     cnn_model.classifier[1] = nn.Linear(in_features, len(classes))
     cnn_path = os.path.join(BACKEND_DIR, 'finetuned_cnn.pth')
     if Path(cnn_path).exists():
-        cnn_model.load_state_dict(torch.load(cnn_path, map_location=device))
+        try:
+            cnn_model.load_state_dict(torch.load(cnn_path, map_location=device))
+            print(f"CNN modeli yüklendi: {cnn_path}")
+        except Exception as e:
+            print(f"CNN state_dict yükleme hatası (varsayılan ağırlıklar kullanılıyor): {e}")
+    else:
+        print(f"CNN dosyası bulunamadı: {cnn_path}")
     cnn_model.classifier = nn.Identity()
     cnn_model = cnn_model.to(device)
     cnn_model.eval()
+    print(f"CNN output boyutu: MobileNetV2 features = 1280")
 
     # Color Analyzer
     color_analyzer = ColorAnalyzer()
@@ -221,11 +228,13 @@ def init_models():
         mlp_model.load_state_dict(torch.load(model_path, map_location=device))
     mlp_model.eval()
     
-    # 4. Load PCA
+    # 4. Load PCA (numpy formatında, sklearn bağımlılığı yok)
     try:
-        pca_path = os.path.join(BACKEND_DIR, "pca_model.pkl")
-        with open(pca_path, "rb") as f:
-            pca_model = pickle.load(f)
+        pca_comp_path = os.path.join(BACKEND_DIR, "pca_components.npy")
+        pca_mean_path = os.path.join(BACKEND_DIR, "pca_mean.npy")
+        pca_components = np.load(pca_comp_path)
+        pca_mean = np.load(pca_mean_path)
+        print(f"PCA yüklendi: {pca_components.shape[0]} bileşen, {pca_components.shape[1]} özellik")
     except Exception as e:
         print(f"PCA yükleme hatası: {e}")
 
@@ -275,11 +284,28 @@ def predict(image_path):
     # 5. Fuse & Normalize
     try:
         combined_feat = np.concatenate([cnn_feat, yolo_feat, color_feat])
+        print(f"combined_feat boyutu: {combined_feat.shape[0]} (beklenen: {len(stats_mean)})")
+
+        if combined_feat.shape[0] != len(stats_mean):
+            raise RuntimeError(
+                f"Birleştirilen özellik boyutu ({combined_feat.shape[0]}) "
+                f"istatistik dosyasıyla uyumsuz ({len(stats_mean)}). "
+                "Model dosyaları yeniden eğitilmeli veya güncellenmelidir."
+            )
+
         normalized_feat = (combined_feat - stats_mean) / stats_std
-        
-        if pca_model is not None:
-            normalized_feat = pca_model.transform(normalized_feat.reshape(1, -1))[0]
-        
+
+        if pca_components is not None and pca_mean is not None:
+            try:
+                # Saf numpy ile PCA transform (sklearn bağımlılığı yok)
+                centered = normalized_feat - pca_mean
+                normalized_feat = centered @ pca_components.T
+                print(f"PCA sonrası boyut: {normalized_feat.shape[0]}")
+            except Exception as e:
+                raise RuntimeError(f"PCA dönüşümü başarısız: {e}")
+        else:
+            raise RuntimeError("PCA bileşenleri yüklenemedi, tahmin yapılamıyor.")
+
     except Exception as e:
         print(f"Özellik Birleştirme veya PCA Hatası: {e}")
         return None
