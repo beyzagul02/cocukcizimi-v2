@@ -102,6 +102,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
 
   Future<String> _resolveServerUrl() async {
     final candidates = [
+      "https://cocukcizimi-v2.onrender.com",
       "http://10.0.2.2:5000",
       "http://localhost:5000",
       "http://172.27.21.21:5000",
@@ -113,7 +114,10 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     int failedCount = 0;
 
     for (var candidate in candidates) {
-      http.get(Uri.parse(candidate)).timeout(const Duration(milliseconds: 1000)).then((response) {
+      final isHttps = candidate.startsWith("https://");
+      final timeoutDuration = isHttps ? const Duration(milliseconds: 3500) : const Duration(milliseconds: 1000);
+
+      http.get(Uri.parse(candidate)).timeout(timeoutDuration).then((response) {
         if (!completer.isCompleted) {
           print("Sunucu bulundu ve seçildi: $candidate");
           completer.complete(candidate);
@@ -121,7 +125,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
       }).catchError((error) {
         failedCount++;
         if (failedCount == candidates.length && !completer.isCompleted) {
-          completer.completeError("Hiçbir yerel sunucuya bağlanılamadı.");
+          completer.completeError("Hiçbir sunucuya bağlanılamadı.");
         }
       });
     }
