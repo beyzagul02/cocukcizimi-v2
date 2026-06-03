@@ -24,7 +24,7 @@ def make_serializable(obj):
 
 @app.route('/', methods=['GET'])
 def health_check():
-    return jsonify({"status": "healthy", "message": "Child Drawing Analysis API is running"}), 200
+    return jsonify({"status": "healthy", "message": "Child Drawing Analysis API is running", "version": "v1.2"}), 200
 
 @app.route('/analyze', methods=['POST'])
 def analyze_image():
