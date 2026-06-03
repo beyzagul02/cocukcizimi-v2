@@ -40,6 +40,14 @@ def analyze_image():
         image = Image.open(file.stream)
         image = ImageOps.exif_transpose(image)
         
+        # 1.5. Bellek tasarrufu için resmi makul bir boyuta küçültüyoruz (maksimum 800px)
+        max_size = 800
+        if image.width > max_size or image.height > max_size:
+            ratio = max_size / max(image.width, image.height)
+            new_size = (int(image.width * ratio), int(image.height * ratio))
+            image = image.resize(new_size, Image.Resampling.LANCZOS)
+            print(f"Resim bellek tasarrufu için küçültüldü: {new_size}")
+            
         # 2. Geçici bir dosya yolu oluşturuyoruz 👈
         suffix = os.path.splitext(file.filename)[1]
         with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
