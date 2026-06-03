@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -119,49 +118,21 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     );
   }
 
+  /// Render sunucusunu önce uyandır, sonra analiz URL'sini döndür.
   Future<String> _resolveServerUrl() async {
-    if (kReleaseMode) {
-      print("Uygulama release modunda: Doğrudan Render bulut sunucusu seçildi.");
-      return "https://cocukcizimi-v2.onrender.com/analyze";
-    }
+    const renderBase = "https://cocukcizimi-v2.onrender.com";
+    const renderAnalyze = "$renderBase/analyze";
 
-    final candidates = [
-      "https://cocukcizimi-v2.onrender.com",
-      "http://10.0.2.2:5000",
-      "http://localhost:5000",
-      "http://172.27.21.21:5000",
-      "http://192.168.1.26:5000",
-      "http://192.168.1.106:5000",
-    ];
-
-    final completer = Completer<String>();
-    int failedCount = 0;
-
-    for (var candidate in candidates) {
-      final isHttps = candidate.startsWith("https://");
-      final timeoutDuration = isHttps ? const Duration(seconds: 75) : const Duration(milliseconds: 1000);
-
-      http.get(Uri.parse(candidate)).timeout(timeoutDuration).then((response) {
-        if (!completer.isCompleted) {
-          print("Sunucu bulundu ve seçildi: $candidate");
-          completer.complete(candidate);
-        }
-      }).catchError((error) {
-        failedCount++;
-        if (failedCount == candidates.length && !completer.isCompleted) {
-          completer.completeError("Hiçbir sunucuya bağlanılamadı.");
-        }
-      });
-    }
-
+    // Sunucuyu uyandırmak için hafif bir GET isteği at (önceden)
     try {
-      final base = await completer.future;
-      return "$base/analyze";
-    } catch (e) {
-      print("Dinamik sunucu tespiti başarısız oldu: $e");
-      // Fallback
-      return "http://10.0.2.2:5000/analyze";
+      await http
+          .get(Uri.parse(renderBase))
+          .timeout(const Duration(seconds: 90));
+    } catch (_) {
+      // Hata olsa bile devam et; asıl istek denenecek
     }
+
+    return renderAnalyze;
   }
 
   Future<void> startAnalysis(String reportName) async {
@@ -186,15 +157,14 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
         ),
       );
 
-      print("Analiz isteği gönderiliyor: $url");
-      var streamedResponse = await request.send().timeout(const Duration(seconds: 75));
+      // Analiz modelleri yükleme süresi dahil 120 sn timeout
+      var streamedResponse = await request.send().timeout(const Duration(seconds: 120));
       var response = await http.Response.fromStream(streamedResponse);
 
       if (response.statusCode == 200) {
         var data = json.decode(utf8.decode(response.bodyBytes));
-        print("Analiz sonucu alındı: $data");
 
-        // Save to Firestore
+        // Firestore'a kaydet
         final user = FirebaseAuth.instance.currentUser;
         final reportMap = {
           "userId": user?.uid ?? "anonymous",
@@ -213,7 +183,6 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
           "movement": data["movement"] ?? [],
         };
 
-        // Add to firestore
         var docRef = await FirebaseFirestore.instance
             .collection("reports")
             .add(reportMap);
@@ -221,23 +190,19 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
 
         if (!mounted) return;
 
-        // Trigger success transition overlay
         setState(() {
           isLoading = false;
           isSuccess = true;
         });
 
-        // 2.4 second playful transition delay
         await Future.delayed(const Duration(milliseconds: 2400));
 
         if (!mounted) return;
 
-        // Reset success state for next time
         setState(() {
           isSuccess = false;
         });
 
-        // Go to report detail screen
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -288,9 +253,9 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
           backgroundColor: AppColors.background,
           appBar: AppBar(
             title: const Text(
-              "Resim Yükle ",
+              "Resim Yükle",
               style: TextStyle(
-                fontSize: 25, // 🔥 burayı artır
+                fontSize: 25,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -325,7 +290,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(26),
                       border: Border.all(
-                        color: AppColors.primary.withOpacity(0.22),
+                        color: AppColors.primary.withValues(alpha: 0.22),
                       ),
                     ),
                     child: selectedImage == null
@@ -426,7 +391,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
         if (isLoading || isSuccess || hasError)
           Positioned.fill(
             child: Scaffold(
-              backgroundColor: Colors.white.withOpacity(0.96),
+              backgroundColor: Colors.white.withValues(alpha: 0.96),
               body: PlayfulTransitionOverlay(
                 isSuccess: isSuccess,
                 hasError: hasError,
@@ -469,10 +434,10 @@ class UploadOptionCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: AppColors.primary.withOpacity(0.16)),
+          border: Border.all(color: AppColors.primary.withValues(alpha: 0.16)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.035),
+              color: Colors.black.withValues(alpha: 0.035),
               blurRadius: 12,
               offset: const Offset(0, 5),
             ),
@@ -601,7 +566,7 @@ class _PlayfulTransitionOverlayState extends State<PlayfulTransitionOverlay> wit
     }
 
     return Container(
-      color: Colors.white.withOpacity(0.96),
+      color: Colors.white.withValues(alpha: 0.96),
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(32.0),
@@ -619,7 +584,6 @@ class _PlayfulTransitionOverlayState extends State<PlayfulTransitionOverlay> wit
       key: const ValueKey("loading"),
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Playful pulsing illustration
         ScaleTransition(
           scale: Tween<double>(begin: 0.9, end: 1.1).animate(
             CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
@@ -630,7 +594,7 @@ class _PlayfulTransitionOverlayState extends State<PlayfulTransitionOverlay> wit
             decoration: BoxDecoration(
               color: AppColors.softPanel,
               shape: BoxShape.circle,
-              border: Border.all(color: AppColors.primary.withOpacity(0.3), width: 3),
+              border: Border.all(color: AppColors.primary.withValues(alpha: 0.3), width: 3),
             ),
             child: const Icon(
               Icons.palette_outlined,
@@ -645,7 +609,6 @@ class _PlayfulTransitionOverlayState extends State<PlayfulTransitionOverlay> wit
           strokeWidth: 4,
         ),
         const SizedBox(height: 32),
-        // Playful changing text
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           child: Text(
@@ -673,7 +636,7 @@ class _PlayfulTransitionOverlayState extends State<PlayfulTransitionOverlay> wit
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
-              color: const Color(0xFFFFF9C4), // Soft yellow
+              color: const Color(0xFFFFF9C4),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: const Color(0xFFFFF176)),
             ),
@@ -706,7 +669,6 @@ class _PlayfulTransitionOverlayState extends State<PlayfulTransitionOverlay> wit
       key: const ValueKey("success"),
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Bouncing paint brush / checkmark icon
         SlideTransition(
           position: Tween<Offset>(
             begin: const Offset(0, -0.1),
@@ -727,12 +689,12 @@ class _PlayfulTransitionOverlayState extends State<PlayfulTransitionOverlay> wit
                 Icon(
                   Icons.auto_awesome,
                   size: 110,
-                  color: Color(0x334CAF50), // Subtle star
+                  color: Color(0x334CAF50),
                 ),
                 Icon(
                   Icons.draw_outlined,
                   size: 60,
-                  color: Color(0xFF4CAF50), // Green brush/draw icon
+                  color: Color(0xFF4CAF50),
                 ),
                 Positioned(
                   bottom: 30,
@@ -790,9 +752,9 @@ class _PlayfulTransitionOverlayState extends State<PlayfulTransitionOverlay> wit
           width: 140,
           height: 140,
           decoration: BoxDecoration(
-            color: const Color(0xFFFFEBEE), // Soft red
+            color: const Color(0xFFFFEBEE),
             shape: BoxShape.circle,
-            border: Border.all(color: Colors.red.withOpacity(0.3), width: 3),
+            border: Border.all(color: Colors.red.withValues(alpha: 0.3), width: 3),
           ),
           child: const Icon(
             Icons.error_outline_rounded,
