@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../main.dart';
 import 'login_screen.dart';
 
@@ -33,6 +34,16 @@ class ReportDetailScreen extends StatelessWidget {
     final List<dynamic> movement = List<dynamic>.from(rawMovement);
 
     final int personCount = reportData["personCount"] ?? 0;
+
+    final rawTimestamp = reportData["timestamp"];
+    String dateStr = "";
+    if (rawTimestamp is Timestamp) {
+      final dt = rawTimestamp.toDate();
+      dateStr = "${dt.day.toString().padLeft(2, '0')}.${dt.month.toString().padLeft(2, '0')}.${dt.year}";
+    } else {
+      final dt = DateTime.now();
+      dateStr = "${dt.day.toString().padLeft(2, '0')}.${dt.month.toString().padLeft(2, '0')}.${dt.year}";
+    }
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -73,6 +84,37 @@ class ReportDetailScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(24),
         children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Row(
+                  children: [
+                    Icon(Icons.calendar_today_outlined, size: 18, color: AppColors.hintText),
+                    SizedBox(width: 8),
+                    Text(
+                      "Oluşturulma Tarihi:",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.hintText,
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  dateStr,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
           ReportSection(
             title: "Duygu Analizi",
             icon: Icons.psychology_outlined,

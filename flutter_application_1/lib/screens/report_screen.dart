@@ -123,6 +123,13 @@ class ReportScreen extends StatelessWidget {
                           ? "%${confidenceVal.toStringAsFixed(1)}"
                           : "%$confidenceVal";
 
+                      final timestamp = report["timestamp"] as Timestamp?;
+                      String dateStr = "Bugün";
+                      if (timestamp != null) {
+                        final dt = timestamp.toDate();
+                        dateStr = "${dt.day.toString().padLeft(2, '0')}.${dt.month.toString().padLeft(2, '0')}.${dt.year}";
+                      }
+
                       return InkWell(
                         borderRadius: BorderRadius.circular(22),
                         onTap: () {
@@ -188,6 +195,14 @@ class ReportScreen extends StatelessWidget {
                                       style: const TextStyle(
                                         fontSize: 13,
                                         color: AppColors.hintText,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      "Tarih: $dateStr",
+                                      style: const TextStyle(
+                                        fontSize: 12.5,
+                                        color: AppColors.greyText,
                                       ),
                                     ),
                                   ],
