@@ -79,5 +79,6 @@ def analyze_image():
         return jsonify({"error": str(e), "traceback": tb}), 500
 
 if __name__ == '__main__':
-    # Run Flask server
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Run Flask server (read port from env for Render compat)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)

@@ -9,3 +9,9 @@ workers = 1
 
 # Number of threads per worker
 threads = 1
+
+# Disable app preloading to prevent PyTorch fork deadlocks in child worker processes
+preload_app = False
+
+# Use simple sync workers for CPU bounds
+worker_class = 'sync'
