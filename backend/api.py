@@ -255,7 +255,7 @@ def run_predict(image_path: str) -> dict:
 
     # KFD & Renk Analizi
     try:
-        ra = RelationshipAnalyzer(model_path=get_best_yolo_model())
+        ra = RelationshipAnalyzer(model=yolo)
         report = ra.analyze_image(image_path)
         result["person_count"] = report.get("person_count", 0)
         result["style"]        = report.get("style_dimensions", {})

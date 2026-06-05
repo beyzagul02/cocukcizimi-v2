@@ -36,8 +36,8 @@ class RelationshipAnalyzer:
 
     def analyze_image(self, image_path):
         """Resimdeki figürler arası ilişkileri KFD boyutlarına göre analiz eder."""
-        # False positive engellemek için confidence artırıldı (0.25 -> 0.45)
-        results = self.model.predict(image_path, conf=0.45, verbose=False, imgsz=320)
+        # Çöp adamları kaçırmaması için çözünürlük artırıldı, güven düşürüldü
+        results = self.model.predict(image_path, conf=0.15, verbose=False, imgsz=640)
         r = results[0]
         
         persons = []
