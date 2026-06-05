@@ -151,7 +151,8 @@ def tr_emotion(eng: str) -> str:
 
 
 def extract_yolo_features(yolo_model, img_path: str) -> np.ndarray:
-    results = yolo_model.predict(img_path, verbose=False, conf=0.25, imgsz=320)
+    # imgsz=640 YOLO'nun standart eğitim çözünürlüğüdür, küçük figürleri daha iyi bulur
+    results = yolo_model.predict(img_path, verbose=False, conf=0.15, imgsz=640)
     r = results[0]
     person_boxes = [b for b in r.boxes if yolo_model.names[int(b.cls[0])] == "person"]
     n = len(person_boxes)
