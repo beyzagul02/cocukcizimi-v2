@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:http/http.dart' as http;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  // Uygulama açıldığı an Render sunucusunu arka planda uyandır
+  // Await kullanılmıyor ki uygulama açılışı gecikmesin (fire and forget)
+  http.get(Uri.parse('https://cocukcizimi-v2.onrender.com/health'))
+      .timeout(const Duration(seconds: 5))
+      .catchError((_) => http.Response('Error', 500));
 
   runApp(const MyApp());
 }

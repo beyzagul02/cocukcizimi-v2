@@ -7,4 +7,4 @@ python-multipart==0.0.9
 ultralytics==8.0.222
 scikit-learn==1.6.1
 pillow==10.1.0
-numpy==2.0.2
+numpy==1.24.3
