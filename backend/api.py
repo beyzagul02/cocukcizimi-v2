@@ -221,7 +221,10 @@ def run_predict(image_path: str) -> dict:
     # Fuse + Normalize + PCA
     combined   = np.concatenate([cnn_feat, yolo_feat, color_feat])
     normalized = (combined - mean) / std
-    pca_feat   = pca.transform(normalized.reshape(1, -1))[0]
+    # scikit-learn sürüm uyumsuzluğu yaşamamak için transform'u manuel yapıyoruz
+    X = normalized.reshape(1, -1)
+    X_centered = X - pca.mean_
+    pca_feat   = np.dot(X_centered, pca.components_.T)[0]
 
     # Predict
     tensor_in = torch.from_numpy(pca_feat).float().unsqueeze(0).to(d)
