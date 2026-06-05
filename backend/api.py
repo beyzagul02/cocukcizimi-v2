@@ -61,6 +61,10 @@ class FusionMLP(nn.Module):
 
 
 def get_best_yolo_model():
+    finetuned = os.path.join(BACKEND_DIR, "yolo_finetuned.pt")
+    if Path(finetuned).exists():
+        return finetuned
+
     runs_dir = Path(os.path.join(BACKEND_DIR, "runs", "detect"))
     if runs_dir.exists():
         def run_num(p):

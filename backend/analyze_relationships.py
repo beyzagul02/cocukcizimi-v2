@@ -8,6 +8,10 @@ BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def get_best_yolo_model():
     """Mevcut en iyi YOLO modelini bulur."""
+    finetuned = os.path.join(BACKEND_DIR, "yolo_finetuned.pt")
+    if Path(finetuned).exists():
+        return finetuned
+
     runs_dir = Path(os.path.join(BACKEND_DIR, "runs", "detect"))
     if not runs_dir.exists():
         return os.path.join(BACKEND_DIR, "yolov8n.pt")
