@@ -1,22 +1,13 @@
 import os
-os.environ["OMP_NUM_THREADS"] = "1"
-os.environ["MKL_NUM_THREADS"] = "1"
-os.environ["OPENBLAS_NUM_THREADS"] = "1"
-os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
-os.environ["NUMEXPR_NUM_THREADS"] = "1"
-os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
-os.environ["MKL_THREADING_TYPE"] = "SEQUENCE"
-
 import numpy as np
 import torch
-torch.set_num_threads(1)
-
 import torch.nn as nn
 from ultralytics import YOLO
 from torchvision import models, transforms
 from PIL import Image
 import json
 import argparse
+import pickle
 from pathlib import Path
 from analyze_relationships import RelationshipAnalyzer
 from analyze_colors import ColorAnalyzer
@@ -27,8 +18,11 @@ COLOR_ORDER = ["Kırmızı", "Mavi", "Yeşil", "Sarı", "Siyah", "Kahverengi", "
 BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
 model_path = os.path.join(BACKEND_DIR, "fusion_mlp_model.pth")
 stats_path = os.path.join(BACKEND_DIR, "fusion_stats.json")
+pca_path   = os.path.join(BACKEND_DIR, "pca_model.pkl")
+cnn_path   = os.path.join(BACKEND_DIR, "finetuned_cnn.pth")
 img_size = (224, 224)
 classes = ["Angry", "Fear", "Happy", "Sad"]
+
 
 # MLP Modeli Tanımı (Eğitimdeki ile AYNI olmalı)
 class FusionMLP(nn.Module):
@@ -152,6 +146,7 @@ def print_cli_report(result):
     style = result.get('style', {})
     print(f"  * Yerleşim: {style.get('placement', 'N/A')}")
     print(f"  * Hiyerarşi: {style.get('hierarchy', 'N/A')}")
+    print(f"  * Kişi Sayısı: {result.get('person_count', 0)}")
     
     movement = result.get('movement', [])
     if movement:
@@ -172,40 +167,26 @@ def print_cli_report(result):
             
     print("\n" + "="*60 + "\n")
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-stats_mean = None
-stats_std = None
-yolo_model = None
-cnn_model = None
-color_analyzer = None
-mlp_model = None
-pca_components = None
-pca_mean = None
+def predict(image_path):
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-def init_models():
-    global stats_mean, stats_std, yolo_model, cnn_model, color_analyzer, mlp_model, pca_components, pca_mean
-    if yolo_model is not None:
-        return
-        
-    print("Modeller hafızaya yükleniyor...")
-    
     # 1. Load Stats
     if not Path(stats_path).exists():
         print("HATA: İstatistik dosyası bulunamadı. Önce eğitimi çalıştırın.")
-        return
-        
+        return None
+
     with open(stats_path, "r") as f:
         stats = json.load(f)
-    stats_mean = np.array(stats["mean"], dtype=np.float32)
-    stats_std = np.array(stats["std"], dtype=np.float32)
+    mean = np.array(stats["mean"], dtype=np.float32)
+    std = np.array(stats["std"], dtype=np.float32)
     
     # 2. Load Models
+    print("Modeller yükleniyor...")
     yolo_model = YOLO(get_best_yolo_model())
     
     cnn_model = models.mobilenet_v2(weights=None)
     in_features = cnn_model.classifier[1].in_features
     cnn_model.classifier[1] = nn.Linear(in_features, len(classes))
-    cnn_path = os.path.join(BACKEND_DIR, 'finetuned_cnn.pth')
     if Path(cnn_path).exists():
         try:
             cnn_model.load_state_dict(torch.load(cnn_path, map_location=device))
@@ -217,36 +198,15 @@ def init_models():
     cnn_model.classifier = nn.Identity()
     cnn_model = cnn_model.to(device)
     cnn_model.eval()
-    print(f"CNN output boyutu: MobileNetV2 features = 1280")
 
     # Color Analyzer
     color_analyzer = ColorAnalyzer()
     
     # 3. Load MLP
-    mlp_model = FusionMLP(input_dim=128, num_classes=len(classes)).to(device)
-    if Path(model_path).exists():
-        mlp_model.load_state_dict(torch.load(model_path, map_location=device))
-    mlp_model.eval()
+    model = FusionMLP(input_dim=128, num_classes=len(classes)).to(device)
+    model.load_state_dict(torch.load(model_path, map_location=device))
+    model.eval()
     
-    # 4. Load PCA (numpy formatında, sklearn bağımlılığı yok)
-    try:
-        pca_comp_path = os.path.join(BACKEND_DIR, "pca_components.npy")
-        pca_mean_path = os.path.join(BACKEND_DIR, "pca_mean.npy")
-        pca_components = np.load(pca_comp_path)
-        pca_mean = np.load(pca_mean_path)
-        print(f"PCA yüklendi: {pca_components.shape[0]} bileşen, {pca_components.shape[1]} özellik")
-    except Exception as e:
-        print(f"PCA yükleme hatası: {e}")
-
-# Modelleri Flask ayağa kalkarken otomatik yükle (Lazy loading için devre dışı bırakıldı)
-# init_models()
-
-def predict(image_path):
-    init_models()
-    if yolo_model is None or cnn_model is None or mlp_model is None:
-        print("HATA: Modeller yüklenemedi.")
-        return None
-        
     # 4. Extract Features
     print(f"Analiz ediliyor: {image_path}")
     
@@ -284,28 +244,14 @@ def predict(image_path):
     # 5. Fuse & Normalize
     try:
         combined_feat = np.concatenate([cnn_feat, yolo_feat, color_feat])
-        print(f"combined_feat boyutu: {combined_feat.shape[0]} (beklenen: {len(stats_mean)})")
-
-        if combined_feat.shape[0] != len(stats_mean):
-            raise RuntimeError(
-                f"Birleştirilen özellik boyutu ({combined_feat.shape[0]}) "
-                f"istatistik dosyasıyla uyumsuz ({len(stats_mean)}). "
-                "Model dosyaları yeniden eğitilmeli veya güncellenmelidir."
-            )
-
-        normalized_feat = (combined_feat - stats_mean) / stats_std
-
-        if pca_components is not None and pca_mean is not None:
-            try:
-                # Saf numpy ile PCA transform (sklearn bağımlılığı yok)
-                centered = normalized_feat - pca_mean
-                normalized_feat = centered @ pca_components.T
-                print(f"PCA sonrası boyut: {normalized_feat.shape[0]}")
-            except Exception as e:
-                raise RuntimeError(f"PCA dönüşümü başarısız: {e}")
-        else:
-            raise RuntimeError("PCA bileşenleri yüklenemedi, tahmin yapılamıyor.")
-
+        normalized_feat = (combined_feat - mean) / std
+        
+        # DİKKAT: PCA dönüşümü sklearn pickle ile yapılıyor.
+        with open(pca_path, "rb") as f:
+            pca = pickle.load(f)
+            
+        normalized_feat = pca.transform(normalized_feat.reshape(1, -1))[0]
+        
     except Exception as e:
         print(f"Özellik Birleştirme veya PCA Hatası: {e}")
         return None
@@ -315,7 +261,7 @@ def predict(image_path):
     temperature = 2.0
     
     with torch.no_grad():
-        outputs = mlp_model(tensor_input)
+        outputs = model(tensor_input)
         scaled_outputs = outputs / temperature
         probs = torch.softmax(scaled_outputs, dim=1)
         confidence, predicted = torch.max(probs, 1)
@@ -340,7 +286,7 @@ def predict(image_path):
 
     # 7. Relationship Analysis & Extensions
     try:
-        analyzer = RelationshipAnalyzer(model=yolo_model)
+        analyzer = RelationshipAnalyzer(model_path=get_best_yolo_model())
         report = analyzer.analyze_image(image_path)
         
         result_data["person_count"] = report.get("person_count", 0)
@@ -359,12 +305,13 @@ def predict(image_path):
         # --- HEURISTICS & SYNTHESIS ---
         summary_parts = []
         
-        summary_parts.append(f"Çizim genel olarak **{class_name}** ({tr_emotion(class_name)}) kategorisinde değerlendirilmiştir (Güven: %{conf_score:.0f}).")
-        
         person_count = result_data.get("person_count", 0)
         placement = result_data["style"].get("placement", "")
         p_happy = result_data["probabilities"].get("Happy", 0)
         p_fear = result_data["probabilities"].get("Fear", 0)
+
+        summary_parts.append(f"Çizim genel olarak **{class_name}** ({tr_emotion(class_name)}) kategorisinde değerlendirilmiştir (Güven: %{conf_score:.0f}).")
+        summary_parts.append(f"Tespit edilen kişi sayısı: {person_count}.")
         
         if person_count == 0:
             summary_parts.append("Resimde insan figürü tespit edilememiştir. Bu durum, çocuğun insan ilişkilerinden kaçınma eğilimi veya çizim tarzıyla (soyut/nesne odaklı) ilgili olabilir.")
@@ -386,10 +333,9 @@ def predict(image_path):
             
         if colors:
             dom_color = colors[0]
-            # dom_meaning = dom_color["meaning"]
             
             positive_colors = ["Sarı", "Turuncu", "Yeşil", "Pembe"]
-            negative_colors = ["Siyah", "Gri", "Kırmızı"] # Kırmızıyı da ekleyelim (öfke)
+            negative_colors = ["Siyah", "Gri", "Kırmızı"]
             
             emotion_type = "Positive" if class_name in ["Happy"] else "Negative"
             color_type = "Neutral"
@@ -420,7 +366,7 @@ if __name__ == "__main__":
         res = predict(args.image)
         if res: print_cli_report(res)
     else:
-        test_dir = Path("dataset_all/Happy")
+        test_dir = Path(os.path.join(BACKEND_DIR, "dataset_all", "Happy"))
         if test_dir.exists():
             test_img = next(test_dir.glob("*.jpg"), None)
             if test_img:
