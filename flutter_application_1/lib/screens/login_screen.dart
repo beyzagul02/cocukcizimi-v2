@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> loginUser() async {
     final email = emailController.text.trim();
-    final password = passwordController.text;
+    final password = passwordController.text.trim();
 
     setState(() {
       errorMessage = null;
@@ -100,17 +100,28 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       );
-    } on FirebaseAuthException {
+    } on FirebaseAuthException catch (e) {
       if (!mounted) return;
 
+      String message = "E-posta veya şifre hatalı";
+      if (e.code == 'invalid-email') {
+        message = "Geçersiz e-posta adresi";
+      } else if (e.code == 'user-disabled') {
+        message = "Bu kullanıcı hesabı askıya alınmış.";
+      } else if (e.code == 'network-request-failed') {
+        message = "İnternet bağlantınızı kontrol edin.";
+      } else if (e.code == 'too-many-requests') {
+        message = "Çok fazla başarısız deneme. Lütfen daha sonra tekrar deneyin.";
+      }
+
       setState(() {
-        errorMessage = "E-posta veya şifre hatalı";
+        errorMessage = "$message (${e.code})";
       });
     } catch (e) {
       if (!mounted) return;
 
       setState(() {
-        errorMessage = "Bir hata oluştu";
+        errorMessage = "Bir hata oluştu: ${e.toString()}";
       });
     } finally {
       if (mounted) {

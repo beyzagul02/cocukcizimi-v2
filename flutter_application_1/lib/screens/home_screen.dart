@@ -103,8 +103,11 @@ class HomeScreen extends StatelessWidget {
                         height: 200,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF3F4F6),
+                          color: AppColors.background,
                           borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: AppColors.primary.withOpacity(0.12),
+                          ),
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16),
@@ -119,8 +122,11 @@ class HomeScreen extends StatelessWidget {
                         width: double.infinity,
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF3F4F6),
+                          color: AppColors.background,
                           borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: AppColors.primary.withOpacity(0.12),
+                          ),
                         ),
                         child: Column(
                           children: [
@@ -135,7 +141,7 @@ class HomeScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             const Text(
-                              "Analize başlamak için aşağıdaki 'Resim Yükle' butonuna tıklayarak çocuğunuzun çizdiği resmi yükleyin. Analiz tamamlandığında 'Raporlarım' sekmesinden detaylı analiz sonuçlarına hemen ulaşabilirsiniz.",
+                              "Analize başlamak için aşağıdaki 'Resim Yükle' butonuna tıklayarak çocuğunuzun çizdiği resmi yükleyin. Resim yüklendikten sonra analiz sonuçlarınızı hemen görüntüleyeceksiniz. Ayrıca dilediğiniz zaman 'Raporlarım' sekmesinden geçmiş analiz sonuçlarınıza ulaşabilirsiniz.",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 13.5,
