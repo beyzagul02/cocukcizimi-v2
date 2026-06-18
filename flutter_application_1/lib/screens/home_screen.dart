@@ -27,128 +27,142 @@ class HomeScreen extends StatelessWidget {
 
       // ❌ AppBar kaldırıldı
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /// 🔴 ÜST BAR (artık body içinde)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "@2026 RGB ürünüdür",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.primary,
-                    ),
-                  ),
-
-                  TextButton.icon(
-                    onPressed: () async {
-                      await FirebaseAuth.instance.signOut();
-
-                      if (!context.mounted) return;
-
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
-                        (route) => false,
-                      );
-                    },
-                    icon: const Icon(Icons.logout, color: AppColors.primary),
-                    label: const Text("Çıkış Yap"),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 12),
-
-              /// 🔵 BAŞLIK
-              Text(
-                "Merhaba $userName",
-                style: Theme.of(context).textTheme.headlineLarge,
-              ),
-
-              const SizedBox(height: 20),
-
-              /// 🟡 TANITIM KARTI
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 18,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(26),
-                  border: Border.all(
-                    color: AppColors.primary.withOpacity(0.18),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.035),
-                      blurRadius: 12,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Column(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// 🔴 ÜST BAR (artık body içinde)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Image.asset(
-                      "assets/images/homeresim2.png",
-                      width: double.infinity,
-                      height: 180,
-                      fit: BoxFit.contain,
-                    ),
-
-                    const SizedBox(height: 12),
-
                     const Text(
-                      "Bizi Anlatan Bir Tanıtım",
-                      textAlign: TextAlign.center,
+                      "@2026 RGB ürünüdür",
                       style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.darkText,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primary,
                       ),
                     ),
 
-                    const SizedBox(height: 6),
+                    TextButton.icon(
+                      onPressed: () async {
+                        await FirebaseAuth.instance.signOut();
 
-                    const Text(
-                      "Çocukların çizimlerinden anlamlı analizler oluşturarak gelişim süreçlerini daha anlaşılır hale getiriyoruz.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 13.5,
-                        color: AppColors.hintText,
-                        height: 1.35,
-                      ),
+                        if (!context.mounted) return;
+
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                          (route) => false,
+                        );
+                      },
+                      icon: const Icon(Icons.logout, color: AppColors.primary),
+                      label: const Text("Çıkış Yap"),
                     ),
                   ],
                 ),
-              ),
 
-              const SizedBox(height: 24),
+                const SizedBox(height: 12),
 
-              /// 🔵 İŞLEMLER
-              const Text(
-                "İşlemler",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                  color: AppColors.darkText,
+                /// 🔵 BAŞLIK
+                Text(
+                  "Merhaba $userName",
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
-              ),
 
-              const SizedBox(height: 14),
+                const SizedBox(height: 20),
 
-              /// 🔲 GRID
-              Expanded(
-                child: GridView.count(
+                /// 🟡 TANITIM KARTI
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 18,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(26),
+                    border: Border.all(
+                      color: AppColors.primary.withOpacity(0.18),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.035),
+                        blurRadius: 12,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 160,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF9FAFB),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        padding: const EdgeInsets.all(8),
+                        child: Center(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.asset(
+                              "assets/images/homeresim2.png",
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 12),
+
+                      const Text(
+                        "Nasıl Kullanılır?",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.darkText,
+                        ),
+                      ),
+
+                      const SizedBox(height: 6),
+
+                      const Text(
+                        "Analize başlamak için aşağıdaki 'Resim Yükle' butonuna tıklayarak çocuğunuzun çizdiği resmi yükleyin. Analiz tamamlandığında 'Raporlarım' sekmesinden detaylı analiz sonuçlarına hemen ulaşabilirsiniz.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 13.5,
+                          color: AppColors.hintText,
+                          height: 1.35,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+
+                /// 🔵 İŞLEMLER
+                const Text(
+                  "İşlemler",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.darkText,
+                  ),
+                ),
+
+                const SizedBox(height: 14),
+
+                /// 🔲 GRID
+                GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: 2,
                   crossAxisSpacing: 14,
                   mainAxisSpacing: 14,
@@ -205,8 +219,9 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
-            ],
+                const SizedBox(height: 24),
+              ],
+            ),
           ),
         ),
       ),
