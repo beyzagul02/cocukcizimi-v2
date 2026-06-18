@@ -100,45 +100,50 @@ class HomeScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
-                        height: 160,
+                        height: 200,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF9FAFB),
+                          color: const Color(0xFFF3F4F6),
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        padding: const EdgeInsets.all(8),
-                        child: Center(
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.asset(
-                              "assets/images/homeresim2.png",
-                              fit: BoxFit.contain,
-                            ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Image.asset(
+                            "assets/images/homeresim2.png",
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
-
-                      const SizedBox(height: 12),
-
-                      const Text(
-                        "Nasıl Kullanılır?",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.darkText,
+                      const SizedBox(height: 16),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF3F4F6),
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                      ),
-
-                      const SizedBox(height: 6),
-
-                      const Text(
-                        "Analize başlamak için aşağıdaki 'Resim Yükle' butonuna tıklayarak çocuğunuzun çizdiği resmi yükleyin. Analiz tamamlandığında 'Raporlarım' sekmesinden detaylı analiz sonuçlarına hemen ulaşabilirsiniz.",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 13.5,
-                          color: AppColors.hintText,
-                          height: 1.35,
+                        child: Column(
+                          children: [
+                            const Text(
+                              "Nasıl Kullanılır?",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.black,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            const Text(
+                              "Analize başlamak için aşağıdaki 'Resim Yükle' butonuna tıklayarak çocuğunuzun çizdiği resmi yükleyin. Analiz tamamlandığında 'Raporlarım' sekmesinden detaylı analiz sonuçlarına hemen ulaşabilirsiniz.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 13.5,
+                                color: Colors.black87,
+                                height: 1.45,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
