@@ -100,10 +100,10 @@ class HomeScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Container(
-                        height: 200,
+                        height: 270,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: AppColors.background,
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
                             color: AppColors.primary.withOpacity(0.12),
@@ -114,6 +114,7 @@ class HomeScreen extends StatelessWidget {
                           child: Image.asset(
                             "assets/images/homeresim2.png",
                             fit: BoxFit.cover,
+                            alignment: Alignment.topCenter,
                           ),
                         ),
                       ),
