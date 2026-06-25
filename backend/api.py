@@ -22,7 +22,7 @@ from fastapi.responses import JSONResponse
 sys.path.insert(0, str(Path(__file__).parent))
 
 from torchvision import models, transforms
-from PIL import Image, ImageOps
+from PIL import Image
 from ultralytics import YOLO
 
 from analyze_relationships import RelationshipAnalyzer
@@ -156,7 +156,7 @@ def tr_emotion(eng: str) -> str:
 
 def extract_yolo_features(yolo_model, img_path: str) -> np.ndarray:
     # imgsz=640 YOLO'nun standart eğitim çözünürlüğüdür, küçük figürleri daha iyi bulur
-    results = yolo_model.predict(img_path, verbose=False, conf=0.15, imgsz=640)
+    results = yolo_model.predict(img_path, verbose=False, conf=0.25)
     r = results[0]
     person_boxes = [b for b in r.boxes if yolo_model.names[int(b.cls[0])] == "person"]
     n = len(person_boxes)
@@ -226,10 +226,7 @@ def run_predict(image_path: str) -> dict:
     # Fuse + Normalize + PCA
     combined   = np.concatenate([cnn_feat, yolo_feat, color_feat])
     normalized = (combined - mean) / std
-    # scikit-learn sürüm uyumsuzluğu yaşamamak için transform'u manuel yapıyoruz
-    X = normalized.reshape(1, -1)
-    X_centered = X - pca.mean_
-    pca_feat   = np.dot(X_centered, pca.components_.T)[0]
+    pca_feat = pca.transform(normalized.reshape(1, -1))[0]
 
     # Predict
     tensor_in = torch.from_numpy(pca_feat).float().unsqueeze(0).to(d)
@@ -345,20 +342,11 @@ async def analyze(image: UploadFile = File(...)):
     if not _models:
         raise HTTPException(503, "Modeller henüz yüklenmedi, lütfen bekleyin.")
 
+    # Geçici dosyaya kaydet (masaüstü versiyonuyla aynı: ön işleme yok)
     suffix = Path(image.filename).suffix if image.filename else ".jpg"
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
         contents = await image.read()
-        # EXIF yön düzeltmesi
-        from io import BytesIO
-        pil_img = Image.open(BytesIO(contents))
-        pil_img = ImageOps.exif_transpose(pil_img)
-        # Bellek tasarrufu için yeniden boyutlandır
-        max_size = 800
-        if pil_img.width > max_size or pil_img.height > max_size:
-            ratio = max_size / max(pil_img.width, pil_img.height)
-            new_size = (int(pil_img.width * ratio), int(pil_img.height * ratio))
-            pil_img = pil_img.resize(new_size, Image.Resampling.LANCZOS)
-        pil_img.save(tmp.name)
+        tmp.write(contents)
         tmp_path = tmp.name
 
     try:

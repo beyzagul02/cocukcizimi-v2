@@ -40,8 +40,8 @@ class RelationshipAnalyzer:
 
     def analyze_image(self, image_path):
         """Resimdeki figürler arası ilişkileri KFD boyutlarına göre analiz eder."""
-        # Çöp adamları kaçırmaması için çözünürlük artırıldı, güven düşürüldü
-        results = self.model.predict(image_path, conf=0.15, verbose=False, imgsz=640)
+        # False positive engellemek için confidence artırıldı (0.25 -> 0.45)
+        results = self.model.predict(image_path, conf=0.45, verbose=False)
         r = results[0]
         
         persons = []
@@ -95,7 +95,11 @@ class RelationshipAnalyzer:
     def detect_animals(self, image_path):
         """Standard YOLO modeli ile hayvanları tespit eder (Kedi, Köpek vb.)."""
         try:
-            results = self.model.predict(image_path, verbose=False, conf=0.3, imgsz=320)
+            # Standart modeli yükle (Cache'den veya indirerek)
+            if not hasattr(self, 'animal_model'):
+                self.animal_model = YOLO("yolov8n.pt") 
+            animal_model = self.animal_model
+            results = animal_model.predict(image_path, verbose=False, conf=0.3)
             
             detected = []
             animal_classes = ["cat", "dog", "bird", "horse", "sheep", "cow", "bear"]
@@ -106,7 +110,7 @@ class RelationshipAnalyzer:
             
             for box in results[0].boxes:
                 cls_id = int(box.cls[0])
-                name = self.model.names[cls_id]
+                name = animal_model.names[cls_id]
                 
                 if name in animal_classes:
                     detected.append({
