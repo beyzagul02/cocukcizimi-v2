@@ -276,7 +276,7 @@ def run_predict(image_path: str) -> dict:
         placement = result["style"].get("placement", "")
 
         parts = [
-            f"Çizim genel olarak **{class_name}** ({tr_emotion(class_name)}) "
+            f"Çizim genel olarak **{tr_emotion(class_name)}** "
             f"kategorisinde değerlendirilmiştir (Güven: %{conf_score:.0f}).",
             f"Tespit edilen kişi sayısı: {pc}."
         ]

@@ -132,7 +132,7 @@ class ReportScreen extends StatelessWidget {
                       report['id'] = doc.id;
 
                       final reportName = report["reportName"] ?? report["fileName"] ?? "Çizim Raporu";
-                      final emotion = report["emotion"] ?? "N/A";
+                      final emotion = trEmotion(report["emotion"] ?? "N/A");
                       final confidenceVal = report["confidence"];
                       final confidence = confidenceVal is num
                           ? "%${confidenceVal.toStringAsFixed(1)}"

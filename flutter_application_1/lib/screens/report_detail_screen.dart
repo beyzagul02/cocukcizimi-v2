@@ -3,6 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../main.dart';
 import 'login_screen.dart';
 
+String trEmotion(String eng) {
+  const map = {
+    'Angry': 'Öfkeli',
+    'Fear': 'Korku/Endişe',
+    'Happy': 'Mutlu',
+    'Sad': 'Üzgün',
+  };
+  return map[eng] ?? eng;
+}
+
 class ReportDetailScreen extends StatelessWidget {
   final Map<String, dynamic> reportData;
 
@@ -11,7 +21,7 @@ class ReportDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String reportName = reportData["reportName"] ?? reportData["fileName"] ?? "Çizim Raporu";
-    final String emotion = reportData["emotion"] ?? "N/A";
+    final String emotion = trEmotion(reportData["emotion"] ?? "N/A");
     final confidenceVal = reportData["confidence"];
     final String confidence = confidenceVal is num
         ? "%${confidenceVal.toStringAsFixed(1)}"
@@ -124,7 +134,7 @@ class ReportDetailScreen extends StatelessWidget {
               ...probabilities.entries.map<String>((e) {
                 final val = e.value;
                 final pct = val is num ? val.toStringAsFixed(1) : val;
-                return "${e.key}: %$pct";
+                return "${trEmotion(e.key)}: %$pct";
               }),
             ],
           ),
