@@ -33,7 +33,16 @@ class ReportDetailScreen extends StatelessWidget {
     final rawWarnings = reportData["warnings"] ?? [];
     final List<String> warnings = List<String>.from(rawWarnings);
 
-    final String psychologicalSummary = reportData["psychologicalSummary"] ?? "";
+    String psychologicalSummary = reportData["psychologicalSummary"] ?? "";
+    psychologicalSummary = psychologicalSummary
+        .replaceAll("**Happy** (Mutlu)", "**Mutlu**")
+        .replaceAll("**Sad** (Üzgün)", "**Üzgün**")
+        .replaceAll("**Angry** (Öfkeli)", "**Öfkeli**")
+        .replaceAll("**Fear** (Korku/Endişe)", "**Korku/Endişe**")
+        .replaceAll("**Happy**", "**Mutlu**")
+        .replaceAll("**Sad**", "**Üzgün**")
+        .replaceAll("**Angry**", "**Öfkeli**")
+        .replaceAll("**Fear**", "**Korku/Endişe**");
     final String stylePlacement = reportData["stylePlacement"] ?? "N/A";
     final String styleHierarchy = reportData["styleHierarchy"] ?? "N/A";
 
