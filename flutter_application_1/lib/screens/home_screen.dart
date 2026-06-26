@@ -25,7 +25,6 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
 
-      // ❌ AppBar kaldırıldı
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -33,7 +32,6 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// 🔴 ÜST BAR (artık body içinde)
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
